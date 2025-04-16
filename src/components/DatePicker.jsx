@@ -38,6 +38,7 @@ export default function DatePicker() {
         onSelect={handleSelect}
         numberOfMonths={2}
         defaultMonth={new Date()}
+        disabled={{ before: new Date() }}
         className="border-t [border-color:#d6e4e7] pt-4"
       />
     </div>
