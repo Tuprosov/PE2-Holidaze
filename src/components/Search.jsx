@@ -1,10 +1,16 @@
 // SearchBar component
-import { useState } from "react";
 import LocationInput from "./LocationInput";
 import DatePicker from "./DatePicker";
+import { format } from "date-fns";
 import AddGuests from "./AddGuests";
 import { FaSearch } from "react-icons/fa";
-import useSearchStore from "../js/store/useSearchStore";
+import {
+  useSearchStore,
+  useDateStore,
+  useGuestStore,
+} from "../js/store/useStore";
+
+import { useEffect, useRef } from "react";
 
 export function SearchMenu() {
   const {
@@ -60,10 +66,41 @@ export function SearchMenu() {
 }
 
 export function SearchBar() {
-  const { showCalendar, setShowCalendar, setShowGuests, showGuests } =
-    useSearchStore();
+  const {
+    showCalendar,
+    setShowCalendar,
+    setShowGuests,
+    showGuests,
+    setShowSuggestions,
+    toggleSearchBar,
+  } = useSearchStore();
+  const { checkIn, checkOut } = useDateStore();
+  const { total, pets } = useGuestStore();
+
+  const searchBarRef = useRef();
+
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (
+        searchBarRef.current &&
+        !searchBarRef.current.contains(event.target)
+      ) {
+        setShowCalendar(false);
+        setShowGuests(false);
+        setShowSuggestions(false);
+        toggleSearchBar();
+      }
+    }
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [setShowCalendar, setShowGuests, setShowSuggestions]);
+
   return (
-    <div className="absolute left-1/2 rounded-full transform -translate-x-1/2 top-20 w-full max-w-[850px] sm:max-w-[700px]">
+    <div
+      ref={searchBarRef}
+      className="absolute left-1/2 rounded-full transform -translate-x-1/2 top-20 w-full max-w-[850px] sm:max-w-[700px]"
+    >
       <form className="relative w-full flex gap-4 flex-wrap align-items-center justify-between">
         <LocationInput />
         <div
@@ -72,9 +109,11 @@ export function SearchBar() {
           className="flex-1 flex justify-center items-center bg-white shadow-md hover:bg-gray-50 transition"
           onClick={() => {
             setShowCalendar(!showCalendar);
+            setShowGuests(false);
+            setShowSuggestions(false);
           }}
         >
-          <span>Check In</span>
+          <span>{checkIn ? format(checkIn, "dd MMM") : "Check In"}</span>
         </div>
         <div
           id="button"
@@ -82,9 +121,11 @@ export function SearchBar() {
           className="flex-1 flex justify-center items-center bg-white shadow-md hover:bg-gray-50 transition"
           onClick={() => {
             setShowCalendar(!showCalendar);
+            setShowGuests(false);
+            setShowSuggestions(false);
           }}
         >
-          <span>Check Out</span>
+          <span>{checkOut ? format(checkOut, "dd MMM") : "Check In"}</span>
         </div>
         <div
           id="button"
@@ -92,10 +133,12 @@ export function SearchBar() {
           className="relative flex-2 flex p-4 shadow-md hover:bg-gray-50 transition "
           onClick={() => {
             setShowGuests(!showGuests);
+            setShowCalendar(false);
+            setShowSuggestions(false);
           }}
         >
           <div className="relative flex-1 flex justify-center items-center">
-            <span> Guests</span>
+            <span> {total ? `${total} guests, ${pets} pets` : "Guests"}</span>
             {showGuests && <AddGuests />}
           </div>
         </div>
