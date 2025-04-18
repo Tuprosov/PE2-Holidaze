@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from "framer-motion";
-import useSearchStore from "../js/store/useSearchStore";
+import { useSearchStore } from "../js/store/useStore";
 import { SearchMenu, SearchBar } from "./Search";
 
 export default function Header() {
