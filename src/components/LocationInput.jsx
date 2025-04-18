@@ -1,10 +1,15 @@
 // LocationInput component
 import { useState, useEffect, useRef } from "react";
-import useSearchStore from "../js/store/useSearchStore";
+import { useSearchStore } from "../js/store/useStore";
 
 export default function LocationInput() {
   const [location, setLocation] = useState("");
-  const { setShowSuggestions, showSuggestions } = useSearchStore();
+  const {
+    setShowSuggestions,
+    showSuggestions,
+    setShowCalendar,
+    setShowGuests,
+  } = useSearchStore();
 
   const simulatedSuggestions = [
     "New York, NY",
@@ -40,7 +45,11 @@ export default function LocationInput() {
         className="w-full rounded-md focus:outline-none"
         placeholder="Enter a location"
         value={location}
-        onClick={() => setShowSuggestions(true)}
+        onClick={() => {
+          setShowSuggestions(true);
+          setShowCalendar(false);
+          setShowGuests(false);
+        }}
         onChange={(e) => setLocation(e.target.value)}
       />
       {/* Simulated Suggestions */}
