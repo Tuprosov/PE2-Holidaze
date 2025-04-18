@@ -1,17 +1,36 @@
-import { useState } from "react";
 import { format } from "date-fns";
 import { DayPicker } from "react-day-picker";
 import "react-day-picker/dist/style.css";
+import { useDateStore, useSearchStore } from "../js/store/useStore";
+import { useRef } from "react";
 
 export default function DatePicker() {
-  const [range, setRange] = useState({ from: undefined, to: undefined });
+  const { checkIn, checkOut, setCheckIn, setCheckOut } = useDateStore();
+  const { setShowCalendar } = useSearchStore();
+  const previousCheckInRef = useRef(checkIn);
 
   const handleSelect = (range) => {
-    setRange(range);
+    const newCheckIn = range?.from;
+    const newCheckOut = range?.to;
+
+    if (newCheckIn && newCheckIn !== previousCheckInRef.current) {
+      setCheckIn(newCheckIn);
+      setCheckOut(null); // Reset checkout if new check-in is chosen
+      previousCheckInRef.current = newCheckIn; // Update ref manually
+      console.log("executing1");
+    }
+
+    if (newCheckIn && newCheckOut) {
+      setCheckIn(newCheckIn);
+      setCheckOut(newCheckOut);
+      console.log("executing2");
+    }
   };
 
-  const handleClear = () => {
-    setRange({ from: undefined, to: undefined });
+  const handleClear = (e) => {
+    e.preventDefault();
+    setCheckIn(null);
+    setCheckOut(null);
   };
 
   return (
@@ -19,12 +38,14 @@ export default function DatePicker() {
       {/* Date display */}
       <div className="mb-4 flex items-center justify-between">
         <div>
-          <span className="font-semibold">Check-In: </span>
-          {range.from ? format(range.from, "dd MMM") : "Not selected"}
+          <span className="font-semibold">
+            Check-In: {checkIn ? format(checkIn, "dd MMM") : "Not selected"}{" "}
+          </span>
         </div>
         <div>
-          <span className="font-semibold">Check-Out: </span>
-          {range.to ? format(range.to, "dd MMM") : "Not selected"}
+          <span className="font-semibold">
+            Check-Out: {checkOut ? format(checkOut, "dd MMM") : "Not selected"}
+          </span>
         </div>
         <button onClick={handleClear} className="p-2 hover:underline ml-4">
           Clear
@@ -34,7 +55,7 @@ export default function DatePicker() {
       {/* Calendar */}
       <DayPicker
         mode="range"
-        selected={range}
+        selected={{ from: checkIn, to: checkOut }}
         onSelect={handleSelect}
         numberOfMonths={2}
         defaultMonth={new Date()}
