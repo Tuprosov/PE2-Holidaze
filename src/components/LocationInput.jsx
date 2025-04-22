@@ -1,31 +1,16 @@
 // LocationInput component
 import { useState, useEffect, useRef } from "react";
-import { useSearchStore } from "../js/store/useStore";
+import { useSearchStore, useVenueStore } from "../js/store/useStore";
 
 export default function LocationInput() {
   const [location, setLocation] = useState("");
+  const { locationSuggestions } = useVenueStore();
   const {
     setShowSuggestions,
     showSuggestions,
     setShowCalendar,
     setShowGuests,
   } = useSearchStore();
-
-  const simulatedSuggestions = [
-    "New York, NY",
-    "Los Angeles, CA",
-    "San Francisco, CA",
-    "Chicago, IL",
-    "Miami, FL",
-    "Seattle, WA",
-    "Boston, MA",
-    "Austin, TX",
-    "Denver, CO",
-    "Orlando, FL",
-    "Las Vegas, NV",
-    "Washington, DC",
-    "Philadelphia, PA",
-  ];
 
   const handleSelect = (suggestion) => {
     setLocation(suggestion);
@@ -55,7 +40,7 @@ export default function LocationInput() {
       {/* Simulated Suggestions */}
       {showSuggestions && (
         <ul className="absolute top-16 max-h-60 overflow-y-auto min-w-[200px] rounded-2xl shadow-md bg-white border [border-color:#d6e4e7] ">
-          {simulatedSuggestions.map((item, index) => (
+          {locationSuggestions.map((item, index) => (
             <li
               key={index}
               onClick={() => handleSelect(item)}
