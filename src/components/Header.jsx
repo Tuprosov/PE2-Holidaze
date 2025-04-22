@@ -1,6 +1,7 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { useSearchStore } from "../js/store/useStore";
 import { SearchMenu, SearchBar } from "./Search";
+import { Menu } from "./Menu";
 
 export default function Header() {
   const { showSearchBar, showSuggestions, showCalendar, showGuests } =
@@ -8,7 +9,6 @@ export default function Header() {
 
   return (
     <>
-      {/* Fixed height header */}
       <header className="bg-white h-20 relative z-10">
         <div className="relative flex w-full px-4 items-center justify-between gap-4 h-full">
           {/* Logo */}
@@ -29,7 +29,7 @@ export default function Header() {
           )}
 
           {/* Burger Menu */}
-          <div className="min-w-[100px]">Burger Menu</div>
+          <Menu />
         </div>
       </header>
 
