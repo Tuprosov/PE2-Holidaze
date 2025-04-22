@@ -1,9 +1,16 @@
 @import "tailwindcss";
+@font-face {
+  font-family: 'Integral CF Bold';
+  src: url('/IntegralCF-Bold.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
 
 #root {
   max-width: 1920px;
   margin: 0 auto;
-  padding: 2rem 0 0 0;
+  padding: 2rem;
   text-align: center;
   font-family: "Satoshi", sans-serif;
 }
