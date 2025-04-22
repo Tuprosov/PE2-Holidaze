@@ -15,7 +15,7 @@ const AddGuests = () => {
             <button
               type="button"
               disabled={adults === 0}
-              className="flex items-center bg-indigo-500 text-white p-2 rounded-full"
+              className="flex items-center p-2 rounded-full"
               onClick={(e) => {
                 e.stopPropagation();
                 decrement("adults");
@@ -26,7 +26,7 @@ const AddGuests = () => {
             <span className="min-w-[11px]">{adults}</span>
             <button
               type="button"
-              className="flex items-center bg-indigo-500 text-white p-2 rounded-full"
+              className="flex items-center p-2 rounded-full"
               onClick={(e) => {
                 e.stopPropagation();
                 increment("adults");
@@ -43,7 +43,7 @@ const AddGuests = () => {
             <button
               type="button"
               disabled={children === 0}
-              className="flex items-center bg-indigo-500 text-white p-2 rounded-full"
+              className="flex items-center p-2 rounded-full"
               onClick={(e) => {
                 decrement("children");
                 e.stopPropagation();
@@ -54,7 +54,7 @@ const AddGuests = () => {
             <span className="min-w-[11px]">{children}</span>
             <button
               type="button"
-              className="flex items-center bg-indigo-500 text-white p-2 rounded-full"
+              className="flex items-center p-2 rounded-full"
               onClick={(e) => {
                 increment("children");
                 e.stopPropagation();
@@ -71,7 +71,7 @@ const AddGuests = () => {
             <button
               type="button"
               disabled={infants === 0}
-              className="flex items-center bg-indigo-500 text-white p-2 rounded-full"
+              className="flex items-center p-2 rounded-full"
               onClick={(e) => {
                 decrement("infants");
                 e.stopPropagation();
@@ -82,7 +82,7 @@ const AddGuests = () => {
             <span className="min-w-[11px]">{infants}</span>
             <button
               type="button"
-              className="flex items-center bg-indigo-500 text-white p-2 rounded-full"
+              className="flex items-center p-2 rounded-full"
               onClick={(e) => {
                 increment("infants");
                 e.stopPropagation();
@@ -99,7 +99,7 @@ const AddGuests = () => {
             <button
               type="button"
               disabled={pets === 0}
-              className="flex items-center bg-indigo-500 text-white p-2 rounded-full"
+              className="flex items-center p-2 rounded-full"
               onClick={(e) => {
                 decrement("pets");
                 e.stopPropagation();
@@ -110,7 +110,7 @@ const AddGuests = () => {
             <span className="min-w-[11px]">{pets}</span>
             <button
               type="button"
-              className="flex items-center bg-indigo-500 text-white p-2 rounded-full"
+              className="flex items-center p-2 rounded-full"
               onClick={(e) => {
                 increment("pets");
                 e.stopPropagation();
