@@ -4,17 +4,31 @@ import { useSearchStore, useVenueStore } from "../js/store/useStore";
 
 export default function LocationInput() {
   const [location, setLocation] = useState("");
-  const { locationSuggestions } = useVenueStore();
+  const { locationSuggestions, setLocationSuggestions } = useVenueStore();
   const {
     setShowSuggestions,
     showSuggestions,
     setShowCalendar,
     setShowGuests,
   } = useSearchStore();
+  const [initialSuggestions, setInitialSuggestions] = useState([]);
 
   const handleSelect = (suggestion) => {
     setLocation(suggestion);
     setShowSuggestions(false); // hide suggestions after selecting
+  };
+
+  useEffect(() => {
+    setInitialSuggestions(locationSuggestions);
+  }, []);
+
+  const handleInputchange = (e) => {
+    const value = e.target.value;
+    setLocation(value);
+    const filteredSuggestions = initialSuggestions.filter((item) =>
+      item.toLowerCase().includes(value.toLowerCase())
+    );
+    setLocationSuggestions(filteredSuggestions);
   };
 
   return (
@@ -26,6 +40,7 @@ export default function LocationInput() {
       </label>
       <input
         id="location"
+        name="location"
         type="text"
         className="w-full rounded-md focus:outline-none"
         placeholder="Enter a location"
@@ -35,26 +50,25 @@ export default function LocationInput() {
           setShowCalendar(false);
           setShowGuests(false);
         }}
-        onChange={(e) => setLocation(e.target.value)}
+        onChange={(e) => handleInputchange(e)}
       />
-      {/* Simulated Suggestions */}
       {showSuggestions && (
-        <ul className="absolute top-16 max-h-60 overflow-y-auto min-w-[200px] rounded-2xl shadow-md bg-white border [border-color:#d6e4e7] ">
-          {locationSuggestions.map((item, index) => (
-            <li
-              key={index}
-              onClick={() => handleSelect(item)}
-              className="py-2 px-3 cursor-pointer hover:bg-gray-200 rounded-md"
-            >
-              {item}
-            </li>
-          ))}
+        <ul className="absolute top-16 h-60 overflow-y-auto min-w-[200px] rounded-2xl shadow-md bg-white border [border-color:#d6e4e7] ">
+          {locationSuggestions.length > 0 ? (
+            locationSuggestions.map((item, index) => (
+              <li
+                key={index}
+                onClick={() => handleSelect(item)}
+                className="py-2 px-3 cursor-pointer hover:bg-gray-200 rounded-md"
+              >
+                {item}
+              </li>
+            ))
+          ) : (
+            <p>No location found</p>
+          )}
         </ul>
       )}
     </div>
   );
 }
-
-// .filter((item) =>
-//   item.toLowerCase().includes(location.toLowerCase())
-// )
