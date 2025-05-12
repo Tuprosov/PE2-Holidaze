@@ -7,12 +7,28 @@
   font-display: swap;
 }
 
+@font-face {
+  font-family: 'Satoshi';
+  src: url('../fonts/Satoshi-Regular.woff2') format('woff2');
+  font-weight: 300;
+  font-display: swap;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Satoshi';
+  src: url('../fonts/Satoshi-Medium.woff2') format('woff2');
+  font-weight: 500;
+  font-display: swap;
+  font-style: normal;
+}
+
 #root {
   max-width: 1920px;
   margin: 0 auto;
   padding: 2rem;
-  text-align: center;
   font-family: "Satoshi", sans-serif;
+  font-weight: 300;
 }
 
 h1, h2, h3 {
@@ -25,12 +41,16 @@ h1 {
   font-size: 3.2em;
 }
 
-h2 {
+h2, #venueTitle {
   font-size: 1.5em;
 }
 
 h3 {
   font-size: 1em;
+}
+
+.rdp-weeks{
+  font-weight: 700;
 }
 
 
