@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { FaUser, FaKey, FaHome, FaBell, FaShieldAlt } from "react-icons/fa";
+import { useUserStore } from "../../js/store/userStore";
 
 const settings = [
   {
@@ -35,6 +36,7 @@ const settings = [
 ];
 
 export default function DisplayAccount() {
+  const { user } = useUserStore();
   return (
     <div className="max-w-6xl mx-auto p-4 mb-6">
       <div className="mb-6">
@@ -46,7 +48,13 @@ export default function DisplayAccount() {
         </Link>
       </div>
 
-      <h2 className="text-2xl font-bold mb-4">Account Settings</h2>
+      <div className="flex gap-4 mb-6">
+        <h2 className="text-2xl font-bold mb-2">Account Settings</h2>
+        <strong>{user.name}</strong>
+        <Link className="underline mb-2" to={"/profile"}>
+          Go to your profile
+        </Link>
+      </div>
 
       <ul className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         {settings.map((item) => (
