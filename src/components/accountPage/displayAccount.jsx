@@ -39,27 +39,34 @@ export default function DisplayAccount() {
   const { user } = useUserStore();
   return (
     <div className="max-w-6xl mx-auto p-4 mb-6">
-      <div className="mb-6">
+      <div className="flex justify-between mb-6">
         <Link
           to="/"
           className="text-blue-600 underline font-semibold hover:text-blue-800"
         >
           ← Back to home
         </Link>
+        <Link
+          className="text-blue-600 underline font-semibold hover:text-blue-800"
+          to={"/profile"}
+        >
+          Go to your profile →
+        </Link>
       </div>
 
       <div className="flex gap-4 mb-6">
         <h2 className="text-2xl font-bold mb-2">Account Settings</h2>
         <strong>{user.name}</strong>
-        <Link className="underline mb-2" to={"/profile"}>
-          Go to your profile
-        </Link>
       </div>
 
       <ul className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         {settings.map((item) => (
-          <li key={item.title} to={item.path}>
-            <Link className="flex flex-col items-start gap-4 p-4 border rounded-xl shadow hover:shadow-md transition bg-white">
+          <li
+            className="p-4 border [border-color:#d6e4e7] shadow-xl rounded-2xl hover:shadow-md transition bg-white"
+            key={item.title}
+            to={item.path}
+          >
+            <Link className="flex items-start flex-col gap-4">
               <div>{item.icon}</div>
               <div>
                 <h3 className="text-lg font-semibold">{item.title}</h3>
