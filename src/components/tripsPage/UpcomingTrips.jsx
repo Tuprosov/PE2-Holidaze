@@ -52,8 +52,8 @@ export default function UpcomingTrips() {
         {upcomingTrips.length > 0 ? (
           <ul className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             {upcomingTrips.map((trip) => (
-              <li>
-                <TripCard key={trip.id} trip={trip} />
+              <li key={trip.id}>
+                <TripCard trip={trip} />
               </li>
             ))}
           </ul>
