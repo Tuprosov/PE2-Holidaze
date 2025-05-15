@@ -3,6 +3,10 @@ import { Routes, Route } from "react-router-dom";
 import Layout from "./components/Layout";
 import HomePage from "./pages/Home";
 import VenuePage from "./pages/DisplayVenue";
+import AuthPage from "./pages/Auth";
+import TripsPage from "./pages/Trips";
+import AccountPage from "./pages/Account";
+import ProfilePage from "./pages/Profile";
 
 function App() {
   return (
@@ -10,7 +14,11 @@ function App() {
       <Route path="/" element={<Layout />}>
         <Route index element={<HomePage />} />
         <Route path="venue/:id" element={<VenuePage />} />
+        <Route path="trips" element={<TripsPage />} />
+        <Route path="account" element={<AccountPage />} />
+        <Route path="profile" element={<ProfilePage />} />
       </Route>
+      <Route path="/auth" element={<AuthPage />} />
     </Routes>
   );
 }
