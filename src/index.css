@@ -10,8 +10,7 @@
 }
 
 a {
-  font-weight: 500;
-  text-decoration: inherit;
+  text-decoration: none;
 }
 
 body {
@@ -22,8 +21,7 @@ body {
 
 
 button, #button {
-  font-size: 1em;
-  font-weight: 500;
+  font-size: 14px;
   font-family: inherit;
   background-color: #d6e4e7;
   border-radius: 50px;
@@ -31,14 +29,23 @@ button, #button {
   cursor: pointer;
 }
 
+button:hover {
+  background-color:#afc4c9;
+  transition: all ease-in-out 0.2s;
+}
 
-#search-button, .rdp-today:not(.rdp-outside){
-    background-color: #7aa7b1;
-    border-radius: 50px;
+#menu-button {
+  background-color: #f3f4f6;
+}
+
+
+#search-button, #book-button, .rdp-today:not(.rdp-outside){
+  background-color: #7aa7b1;
+  border-radius: 50px;
 }
 
 :is(.rdp-button_next, .rdp-button_previous) .rdp-chevron {
-    fill: #7aa7b1;
+  fill: #7aa7b1;
 }
 
 button:focus,
