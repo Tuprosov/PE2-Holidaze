@@ -1,21 +1,59 @@
 import { useState } from "react";
+import { useUserStore } from "../../js/store/userStore";
 
 export default function Dashboard() {
   const [activeTab, setActiveTab] = useState("upcoming");
+  const { reservations } = useUserStore();
 
   const renderContent = () => {
     switch (activeTab) {
-      case "upcoming":
-        return <p>You have X upcoming reservations.</p>;
       case "past":
-        return <p>You have Y past reservations.</p>;
+        return (
+          <>
+            <p>You have {reservations.past.length} past reservations.</p>
+            {displayReservations()}
+          </>
+        );
       case "cancelled":
-        return <p>You have Z cancelled reservations.</p>;
+        return (
+          <>
+            <p>
+              You have {reservations.cancelled.length} cancelled reservations.
+            </p>
+            {displayReservations()}
+          </>
+        );
       case "all":
-        return <p>All reservations.</p>;
-      default:
-        return null;
+        return (
+          <>
+            <p>You have {reservations.all.length} total reservations.</p>
+            {displayReservations()}
+          </>
+        );
+      default: // handles "upcoming" or any unexpected value
+        return (
+          <>
+            <p>
+              You have {reservations.upcoming.length} upcoming reservations.
+            </p>
+            {displayReservations()}
+          </>
+        );
     }
+  };
+
+  const displayReservations = () => {
+    return (
+      reservations[activeTab]?.length > 0 && (
+        <ul>
+          {reservations[activeTab].map((res) => (
+            <li key={res.id}>
+              {res.dateFrom} - {res.dateTo}
+            </li>
+          ))}
+        </ul>
+      )
+    );
   };
 
   return (
