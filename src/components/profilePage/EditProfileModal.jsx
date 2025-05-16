@@ -8,7 +8,6 @@ export default function EditProfileModal({ isOpen, onClose, user }) {
     email: user?.email || "",
     city: user?.city || "",
     bio: user?.bio || "",
-    about: user?.about || "",
     avatar: "",
     banner: "",
   });
@@ -21,30 +20,52 @@ export default function EditProfileModal({ isOpen, onClose, user }) {
     }));
   };
 
-  const validateEmail = (email) => email.endsWith("@stud.noroff.no");
+  const handleClose = () => {
+    onClose();
+    setFormData({
+      name: user?.name || "",
+      email: user?.email || "",
+      city: user?.city || "",
+      bio: user?.bio || "",
+      avatar: "",
+      banner: "",
+    });
+    setMessage("");
+  };
+
+  const validateEmail = (email) =>
+    email ? email.endsWith("@stud.noroff.no") : true;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    if (Object.values(formData).every((val) => !val)) {
+      return setMessage("At least one field must be filled out");
+    }
+
     if (!validateEmail(formData.email)) {
       return setMessage("Email must end with @stud.noroff.no");
     }
-
     const payload = {
       name: formData.name,
       email: formData.email,
       city: formData.city,
       bio: formData.bio,
-      avatar: {
-        url: formData.avatar,
-        alt: "Profile Picture",
-      },
-      banner: {
-        url: formData.banner,
-        alt: "Banner Picture",
-      },
     };
 
+    if (formData.avatar) {
+      payload.avatar = {
+        url: formData.avatar,
+        alt: "Profile Picture",
+      };
+    }
+
+    if (formData.banner) {
+      payload.banner = {
+        url: formData.banner,
+        alt: "Banner Picture",
+      };
+    }
     try {
       await update(user.name, payload);
       setMessage("Profile updated successfully!");
@@ -95,13 +116,6 @@ export default function EditProfileModal({ isOpen, onClose, user }) {
             maxLength={50}
             className="w-full h-[42px] p-2 border [border-color:#d6e4e7] rounded resize-none"
           />
-          <textarea
-            name="about"
-            value={formData.about}
-            onChange={handleChange}
-            placeholder="About Me"
-            className="w-full p-2 border rounded [border-color:#d6e4e7] resize-none"
-          />
           <input
             name="avatar"
             value={formData.avatar}
@@ -119,7 +133,7 @@ export default function EditProfileModal({ isOpen, onClose, user }) {
           <div className="flex justify-end gap-3 mt-4">
             <button
               type="button"
-              onClick={onClose}
+              onClick={handleClose}
               className="px-4 py-2 rounded"
             >
               Cancel
