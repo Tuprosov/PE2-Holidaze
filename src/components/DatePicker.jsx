@@ -1,29 +1,36 @@
 import { format } from "date-fns";
 import { DayPicker } from "react-day-picker";
 import "react-day-picker/dist/style.css";
-import { useDateStore, useSearchStore } from "../js/store/useStore";
-import { useRef } from "react";
+import { useEffect, useState } from "react";
+import {
+  useVenueStore,
+  useBookingStore,
+  useDateStore,
+} from "../js/store/useStore";
 
-export default function DatePicker() {
+export default function DatePicker({ isBooking = false }) {
   const { checkIn, checkOut, setCheckIn, setCheckOut } = useDateStore();
-  const { setShowCalendar } = useSearchStore();
-  const previousCheckInRef = useRef(checkIn);
+  const { bookings, singleVenue } = useVenueStore();
+  const [disabledDates, setDisabledDates] = useState([
+    { before: new Date() },
+    ...bookings,
+  ]);
+  const { setBooking, setTotalPrice } = useBookingStore();
 
   const handleSelect = (range) => {
     const newCheckIn = range?.from;
     const newCheckOut = range?.to;
+    setCheckIn(newCheckIn);
+    setCheckOut(newCheckOut);
 
-    if (newCheckIn && newCheckIn !== previousCheckInRef.current) {
-      setCheckIn(newCheckIn);
-      setCheckOut(null); // Reset checkout if new check-in is chosen
-      previousCheckInRef.current = newCheckIn; // Update ref manually
-      console.log("executing1");
-    }
-
-    if (newCheckIn && newCheckOut) {
-      setCheckIn(newCheckIn);
-      setCheckOut(newCheckOut);
-      console.log("executing2");
+    if (isBooking) {
+      setBooking({ dateFrom: newCheckIn, dateTo: newCheckOut });
+      setTotalPrice(
+        newCheckIn && newCheckOut
+          ? Math.ceil((newCheckOut - newCheckIn) / (1000 * 60 * 60 * 24)) *
+              singleVenue.price
+          : 0
+      );
     }
   };
 
@@ -31,20 +38,54 @@ export default function DatePicker() {
     e.preventDefault();
     setCheckIn(null);
     setCheckOut(null);
+    setDisabledDates([{ before: new Date() }, ...bookings]);
+    setBooking({ dateFrom: null, dateTo: null });
   };
 
+  useEffect(() => {
+    if (checkIn) {
+      const nextBooking = bookings.find((b) => new Date(b.from) > checkIn);
+      const previousBooking = [...bookings]
+        .reverse()
+        .find((b) => new Date(b.to) < checkIn);
+
+      // disabled dates
+      const disabled = [...bookings];
+
+      if (previousBooking) {
+        const earliestAllowedCheckin = new Date(previousBooking.to);
+        earliestAllowedCheckin.setDate(earliestAllowedCheckin.getDate() + 1);
+        disabled.unshift(
+          { before: earliestAllowedCheckin },
+          { before: new Date() }
+        );
+      } else {
+        // if no previous booking, disable only past dates
+        disabled.unshift({ before: new Date() });
+      }
+
+      if (nextBooking) {
+        const latestAllowedCheckout = new Date(nextBooking.from);
+        latestAllowedCheckout.setDate(latestAllowedCheckout.getDate() - 1);
+        disabled.push({ after: latestAllowedCheckout });
+      }
+
+      setDisabledDates(disabled);
+    }
+  }, [bookings, checkIn]);
+
   return (
-    <div className="absolute min-w-[700px] top-16 left-1/2 transform -translate-x-1/2 bg-white border [border-color:#d6e4e7] shadow-md rounded-2xl p-4">
+    <div className="bg-white border [border-color:#d6e4e7] shadow-md rounded-2xl p-4">
       {/* Date display */}
       <div className="mb-4 flex items-center justify-between">
         <div>
           <span className="font-semibold">
-            Check-In: {checkIn ? format(checkIn, "dd MMM") : "Not selected"}{" "}
+            Check-In: {checkIn ? format(checkIn, "dd MMM") : ""}
           </span>
         </div>
         <div>
           <span className="font-semibold">
-            Check-Out: {checkOut ? format(checkOut, "dd MMM") : "Not selected"}
+            Check-Out: {checkOut ? format(checkOut, "dd MMM") : ""}
           </span>
         </div>
         <button onClick={handleClear} className="p-2 hover:underline ml-4">
@@ -55,11 +96,12 @@ export default function DatePicker() {
       {/* Calendar */}
       <DayPicker
         mode="range"
+        startMonth={new Date()}
         selected={{ from: checkIn, to: checkOut }}
         onSelect={handleSelect}
         numberOfMonths={2}
         defaultMonth={new Date()}
-        disabled={{ before: new Date() }}
+        disabled={disabledDates}
         className="border-t [border-color:#d6e4e7] pt-4"
       />
     </div>
