@@ -53,7 +53,7 @@ export default function UpcomingTrips() {
       <section>
         <h3 className="text-2xl font-bold mb-4">Upcoming Trips</h3>
         {upcoming.length > 0 ? (
-          <ul className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
             {upcoming.map((trip) => (
               <li key={trip.id}>
                 <TripCard trip={trip} />
@@ -78,11 +78,13 @@ export default function UpcomingTrips() {
         <h3 className="text-2xl font-bold mb-4">Past Trips</h3>
         {visiblePastTrips.length > 0 ? (
           <>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <ul className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               {visiblePastTrips.map((trip) => (
-                <TripCard key={trip.id} trip={trip} />
+                <li key={trip.id}>
+                  <TripCard trip={trip} />
+                </li>
               ))}
-            </div>
+            </ul>
             {past.length > 4 && (
               <button
                 onClick={() => setShowAllPast((prev) => !prev)}
@@ -102,11 +104,13 @@ export default function UpcomingTrips() {
         <h3 className="text-2xl font-bold mb-4">Cancelled Trips</h3>
         {visibleCancelledTrips.length > 0 ? (
           <>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <ul className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {visibleCancelledTrips.map((trip) => (
-                <TripCard key={trip.id} trip={trip} />
+                <li key={trip.id}>
+                  <TripCard trip={trip} />
+                </li>
               ))}
-            </div>
+            </ul>
             {cancelled.length > 4 && (
               <button
                 onClick={() => setShowAllCancelled((prev) => !prev)}
