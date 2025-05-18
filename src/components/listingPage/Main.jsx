@@ -1,11 +1,12 @@
 import { useState } from "react";
-import { FaHome } from "react-icons/fa"; // home icon
+import { FaHome, FaEdit, FaTrash } from "react-icons/fa";
+import { motion } from "framer-motion";
 import { useUserStore } from "../../js/store/userStore";
 import CreateListing from "./CreateListing";
-import { section } from "framer-motion/client";
 
 function ListingCard({ venue, reservations }) {
   const [showBookings, setShowBookings] = useState(false);
+  const [showModal, setShowModal] = useState(false);
   const formatDate = (date) =>
     new Date(date).toLocaleDateString("en-US", {
       year: "numeric",
@@ -19,48 +20,111 @@ function ListingCard({ venue, reservations }) {
   );
 
   return (
-    <div className="border [border-color:#d6e4e7] rounded p-4 mb-6 shadow-md max-w-xl w-full">
-      <img
-        src={venue.media[0].url}
-        alt={venue.media[0].alt || venue.name}
-        className="w-full h-48 object-cover rounded mb-4"
-      />
-      <h3 className="text-xl font-bold mb-2">{venue.name}</h3>
-      <p className="mb-2">
-        {venue.location.country}, {venue.location.city}
-      </p>
-      {/* Add media, description, etc. here */}
-
-      <button
-        onClick={() => setShowBookings((prev) => !prev)}
-        className="underline p-2 mb-2"
+    <>
+      <div
+        onClick={() => setShowModal(true)}
+        className="border [border-color:#d6e4e7] rounded p-4 mb-6 shadow-md max-w-xl w-full cursor-pointer"
       >
-        Upcoming Reservations ({venueReservations.length})
-      </button>
+        <img
+          src={venue.media[0].url}
+          alt={venue.media[0].alt || venue.name}
+          className="w-full h-48 object-cover rounded mb-4"
+        />
+        <h3 className="text-xl font-bold mb-2">{venue.name}</h3>
+        <p className="mb-2">
+          {venue.location.country}, {venue.location.city}
+        </p>
+        {/* Add media, description, etc. here */}
 
-      {showBookings && (
-        <ul className="pl-4 border-l ml-2">
-          {venueReservations.length > 0 ? (
-            venueReservations.map((booking) => (
-              <li key={booking.id} className="mb-1">
-                <strong>
-                  {formatDate(booking.dateFrom)} - {formatDate(booking.dateTo)}
-                </strong>{" "}
-                | Guests: {booking.guests}
-              </li>
-            ))
-          ) : (
-            <li>No upcoming reservations.</li>
-          )}
-        </ul>
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            setShowBookings((prev) => !prev);
+          }}
+          className="underline p-2 mb-2"
+        >
+          Upcoming Reservations ({venueReservations.length})
+        </button>
+
+        {showBookings && (
+          <ul className="pl-4 border-l ml-2">
+            {venueReservations.length > 0 ? (
+              venueReservations.map((booking) => (
+                <li key={booking.id} className="mb-1">
+                  <strong>
+                    {formatDate(booking.dateFrom)} -{" "}
+                    {formatDate(booking.dateTo)}
+                  </strong>{" "}
+                  | Guests: {booking.guests}
+                </li>
+              ))
+            ) : (
+              <li>No upcoming reservations.</li>
+            )}
+          </ul>
+        )}
+      </div>
+      {/* Modal */}
+      {showModal && (
+        <div
+          onClick={() => setShowModal(false)}
+          className="fixed inset-0 bg-black/30 bg-opacity-50 flex items-center justify-center z-50"
+        >
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.9 }}
+            transition={{ duration: 0.3, ease: "easeInOut" }}
+            onClick={(e) => e.stopPropagation()}
+            className="bg-white p-10 rounded-xl shadow-lg max-w-sm w-full text-center space-y-6"
+          >
+            <h2 className="text-xl font-bold">Manage Listing</h2>
+            {/* Reservation Image */}
+            <div className="flex justify-center items-center">
+              {venue.media?.[0]?.url && (
+                <img
+                  src={venue.media[0].url}
+                  alt={venue.media[0].alt || "Reservation image"}
+                  className="w-[50%] h-40 object-cover rounded mb-4"
+                />
+              )}
+            </div>
+            <button
+              onClick={() => {
+                // Handle edit
+                console.log("Edit clicked", venue.id);
+              }}
+              className="flex justify-center items-center gap-2 w-full py-2 rounded"
+            >
+              <FaEdit />
+              Edit Listing
+            </button>
+            <button
+              onClick={() => {
+                // Handle delete
+                console.log("Delete clicked", venue.id);
+              }}
+              className="flex justify-center items-center gap-2 w-full py-2 rounded"
+            >
+              <FaTrash />
+              Delete Listing
+            </button>
+            <button
+              onClick={() => setShowModal(false)}
+              className="text-gray-500 underlinep p-2"
+            >
+              Cancel
+            </button>
+          </motion.div>
+        </div>
       )}
-    </div>
+    </>
   );
 }
 
 export default function Main() {
   const { userVenues, reservations, user, isLoading, message } = useUserStore();
-  const [creating, setCreating] = useState(false);
+  const [showCreateModal, setShowCreateModal] = useState(false);
 
   // No venues case
   if (userVenues.length === 0) {
@@ -69,12 +133,14 @@ export default function Main() {
         <FaHome className="text-6xl text-gray-400" />
         <p className="text-lg font-semibold">You have no venues listed.</p>
         <button
-          onClick={() => setCreating(true)}
+          onClick={() => setShowCreateModal(true)}
           className="px-4 py-2 0 rounded"
         >
           Create Listing
         </button>
-        <CreateListing onClose={setCreating} creating={creating} user={user} />
+        {showCreateModal && (
+          <CreateListing onClose={setShowCreateModal} user={user} />
+        )}
       </div>
     );
   }
@@ -108,12 +174,14 @@ export default function Main() {
         </section>
       )}
       <button
-        onClick={() => setCreating(true)}
+        onClick={() => setShowCreateModal(true)}
         className="absolute right-10 top-10 px-6 py-2 0 rounded"
       >
         Create Listing
       </button>
-      <CreateListing onClose={setCreating} creating={creating} user={user} />
+      {showCreateModal && (
+        <CreateListing onClose={setShowCreateModal} user={user} />
+      )}
     </main>
   );
 }

@@ -31,7 +31,7 @@ const steps = [
   "Set price",
 ];
 
-export default function CreateListing({ onClose, creating, user }) {
+export default function CreateListing({ onClose, user, isCreating = true }) {
   const { createListing, setMessage, setUserVenues } = useUserStore();
   const [step, setStep] = useState(0);
   const [form, setForm] = useState(initialForm);
@@ -178,7 +178,7 @@ export default function CreateListing({ onClose, creating, user }) {
     }
   };
 
-  if (!creating || !user) return null;
+  if (!user) return null;
 
   return (
     <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50">
@@ -323,7 +323,7 @@ export default function CreateListing({ onClose, creating, user }) {
               </button>
             ) : (
               <button type="submit" className="px-4 py-2 bg-green-600 rounded">
-                Create Listing
+                {isCreating ? "Create Listing" : "Update listing"}
               </button>
             )}
           </div>
