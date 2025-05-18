@@ -75,6 +75,7 @@ export default function EditProfileModal({ isOpen, onClose, user }) {
   };
 
   if (!isOpen || !user) return null;
+
   return (
     <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50">
       <motion.div
@@ -85,7 +86,14 @@ export default function EditProfileModal({ isOpen, onClose, user }) {
         className="bg-white rounded-xl p-6 w-full max-w-lg shadow-lg"
       >
         <h2 className="text-xl font-semibold mb-4">Edit Profile</h2>
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="relative space-y-4">
+          <button
+            onClick={() => onClose(false)}
+            type="button"
+            className="absolute p-2 -top-12 right-0 w-10 h-10"
+          >
+            ✕
+          </button>
           <input
             name="name"
             value={formData.name}
