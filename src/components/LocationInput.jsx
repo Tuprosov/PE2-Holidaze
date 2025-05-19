@@ -1,35 +1,52 @@
 // LocationInput component
-import { useState, useEffect, useRef } from "react";
-import { useSearchStore, useVenueStore } from "../js/store/useStore";
+import { useEffect } from "react";
+import {
+  useSearchStore,
+  useVenueStore,
+  useLocationStore,
+} from "../js/store/useStore";
 
 export default function LocationInput() {
-  const [location, setLocation] = useState("");
-  const { locationSuggestions, setLocationSuggestions } = useVenueStore();
+  const { location, setLocation, locationSuggestions, setLocationSuggestions } =
+    useLocationStore();
+  const { originalVenues } = useVenueStore();
   const {
     setShowSuggestions,
     showSuggestions,
     setShowCalendar,
     setShowGuests,
   } = useSearchStore();
-  const [initialSuggestions, setInitialSuggestions] = useState([]);
-
-  const handleSelect = (suggestion) => {
-    setLocation(suggestion);
-    setShowSuggestions(false); // hide suggestions after selecting
-  };
 
   useEffect(() => {
-    setInitialSuggestions(locationSuggestions);
-  }, []);
+    if (originalVenues.length > 0) {
+      const suggestions = Array.from(
+        new Set(
+          originalVenues
+            .filter(
+              (venue) =>
+                venue.location && venue.location.city && venue.location.country
+            )
+            .map((venue) => `${venue.location.city}, ${venue.location.country}`)
+        )
+      );
+      setLocationSuggestions(suggestions);
+    }
+  }, [setLocationSuggestions]);
 
   const handleInputchange = (e) => {
     const value = e.target.value;
     setLocation(value);
-    const filteredSuggestions = initialSuggestions.filter((item) =>
-      item.toLowerCase().includes(value.toLowerCase())
-    );
-    setLocationSuggestions(filteredSuggestions);
   };
+
+  const handleSelect = (suggestion) => {
+    setLocation(suggestion);
+    setShowSuggestions(false);
+    setShowCalendar(true);
+  };
+
+  const filteredSuggestions = locationSuggestions.filter((item) =>
+    item.toLowerCase().includes(location.toLowerCase())
+  );
 
   return (
     <div className="relative w-full p-4 flex-2 bg-white border-[1px] [border-color:#d6e4e7] shadow-lg rounded-full">
@@ -51,11 +68,17 @@ export default function LocationInput() {
           setShowGuests(false);
         }}
         onChange={(e) => handleInputchange(e)}
+        onKeyDown={(e) => {
+          if (e.key === "Enter") {
+            setShowCalendar(true);
+            setShowSuggestions(false);
+          }
+        }}
       />
       {showSuggestions && (
-        <ul className="absolute top-16 h-60 overflow-y-auto min-w-[200px] rounded-2xl shadow-md bg-white border [border-color:#d6e4e7] ">
-          {locationSuggestions.length > 0 ? (
-            locationSuggestions.map((item, index) => (
+        <ul className="absolute top-16 right-0 h-60 overflow-y-auto w-full overflow-clip rounded-2xl shadow-md bg-white border [border-color:#d6e4e7] z-10">
+          {filteredSuggestions.length > 0 ? (
+            filteredSuggestions.map((item, index) => (
               <li
                 key={index}
                 onClick={() => handleSelect(item)}
