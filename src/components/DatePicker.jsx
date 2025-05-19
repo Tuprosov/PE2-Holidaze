@@ -6,11 +6,13 @@ import {
   useVenueStore,
   useBookingStore,
   useDateStore,
+  useSearchStore,
 } from "../js/store/useStore";
 
 export default function DatePicker({ isBooking = false }) {
   const { checkIn, checkOut, setCheckIn, setCheckOut } = useDateStore();
   const { bookings, singleVenue } = useVenueStore();
+  const { setShowGuests, setShowCalendar } = useSearchStore();
   const [disabledDates, setDisabledDates] = useState([
     { before: new Date() },
     ...bookings,
@@ -22,6 +24,12 @@ export default function DatePicker({ isBooking = false }) {
     const newCheckOut = range?.to;
     setCheckIn(newCheckIn);
     setCheckOut(newCheckOut);
+
+    //automatically switch to guestselection when done with dates
+    if (newCheckIn && newCheckOut && newCheckIn !== newCheckOut) {
+      setShowCalendar(false);
+      setShowGuests(true);
+    }
 
     if (isBooking) {
       setBooking({ dateFrom: newCheckIn, dateTo: newCheckOut });
@@ -42,6 +50,7 @@ export default function DatePicker({ isBooking = false }) {
     setBooking({ dateFrom: null, dateTo: null });
   };
 
+  // set disabled dates, to allow user to select only available checkout afer check in set
   useEffect(() => {
     if (checkIn) {
       const nextBooking = bookings.find((b) => new Date(b.from) > checkIn);
@@ -75,7 +84,7 @@ export default function DatePicker({ isBooking = false }) {
   }, [bookings, checkIn]);
 
   return (
-    <div className="bg-white border [border-color:#d6e4e7] shadow-md rounded-2xl p-4">
+    <div className=" bg-white border [border-color:#d6e4e7] shadow-md rounded-2xl p-4">
       {/* Date display */}
       <div className="mb-4 flex items-center justify-between">
         <div>
@@ -102,7 +111,7 @@ export default function DatePicker({ isBooking = false }) {
         numberOfMonths={2}
         defaultMonth={new Date()}
         disabled={disabledDates}
-        className="border-t [border-color:#d6e4e7] pt-4"
+        className="border-t md:min-w-[750px] [border-color:#d6e4e7] pt-4"
       />
     </div>
   );
