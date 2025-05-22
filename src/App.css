@@ -1,4 +1,5 @@
 @import "tailwindcss";
+
 @font-face {
   font-family: 'Integral CF Bold';
   src: url('/IntegralCF-Bold.woff2') format('woff2');
@@ -37,16 +38,93 @@ h1, h2, h3 {
   color: #000000;
 }
 
-h1 {
-  font-size: 3.2em;
-}
-
-h2, #venueTitle {
+h1, h2 {
   font-size: 1.5em;
 }
-
 h3 {
   font-size: 1em;
+}
+
+@keyframes logo-spin {
+  from {
+    transform: rotateY(0deg);
+  }
+  to {
+    transform: rotateY(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+ .logo {
+    animation: logo-spin infinite 20s linear;
+  }
+}
+
+@media (max-width: 750px) {
+  h1, h2 {
+    font-size: 1em;
+  }
+}
+
+:root {
+  line-height: 1.5;
+  font-weight: 400;
+  background-color: #ffffff;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+  text-decoration: none;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+}
+
+
+button, #button {
+  font-size: 14px;
+  font-family: inherit;
+  background-color: #d6e4e7;
+  border-radius: 50px;
+  color: #301313;
+  cursor: pointer;
+}
+
+#button-delete {
+  background-color: #f3f4f6;
+  color: red;
+}
+
+button:hover,
+#button:hover,
+#button-delete:hover {
+  background-color: #afc4c9;
+  transition: all ease-in-out 0.2s;
+}
+
+button:focus,
+button:focus-visible {
+  outline: 4px auto #6a7282;
+}
+
+#menu-button {
+  background-color: #f3f4f6;
+}
+
+#search-button, #book-button, .rdp-today:not(.rdp-outside){
+  background-color: #7aa7b1;
+  border-radius: 50px;
+}
+
+:is(.rdp-button_next, .rdp-button_previous) .rdp-chevron {
+  fill: #7aa7b1;
 }
 
 .rdp-weeks{
@@ -54,25 +132,4 @@ h3 {
 }
 
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
-}
-
-.card {
-  padding: 2em;
-}
-
-.read-the-docs {
-  color: #888;
-}
