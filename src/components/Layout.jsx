@@ -1,13 +1,26 @@
 import Header from "./Header.jsx";
 import Footer from "./Footer.jsx";
-import { Outlet } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
+import { getTitle } from "../js/utils/generateTitles.js";
+import { useEffect } from "react";
+import { useUserStore } from "../js/store/userStore.js";
+import { useVenueStore } from "../js/store/useStore.js";
 
 export default function Layout() {
+  const { user } = useUserStore();
+  const { singleVenue } = useVenueStore();
+  const location = useLocation();
+  const isVenuePage = location.pathname.startsWith("/venue/");
+
+  useEffect(() => {
+    document.title = getTitle(location.pathname, { user, singleVenue });
+  }, [singleVenue]);
+
   return (
-    <>
+    <div className={isVenuePage ? "max-w-[1280px] mx-auto" : ""}>
       <Header />
       <Outlet />
       <Footer />
-    </>
+    </div>
   );
 }
