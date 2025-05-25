@@ -1,12 +1,84 @@
-# React + Vite
+# Holidaze
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Holidaze is a venue booking platform where users can browse, search, and book places to stay. The platform features:
 
-Currently, two official plugins are available:
+* Venue listings with detailed information
+* Date and guest filtering
+* User login and profile pages
+* A mobile-friendly search experience
+* Hosting features like managing listings and viewing reservations
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Features
 
-## Expanding the ESLint configuration
+* Responsive design for mobile and desktop
+* Search bar with location, date, and guest filtering
+* Wishlist and booking functionality
+* Host dashboard for managing venues and bookings
+* Integration with Noroff API for backend data
 
-If you are developing a production application, we recommend using TypeScript and enable type-aware lint rules. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Technologies Used
+
+* React
+* Zustand (state management)
+* React Router
+* Tailwind CSS
+* Vite
+
+## Getting Started
+
+### Prerequisites
+
+* Node.js (v18 or later recommended)
+* npm (v9 or later)
+
+### Installation
+
+1. Clone the repository:
+
+```bash
+git clone https://github.com/your-username/holidaze.git
+cd holidaze
+```
+
+2. Install dependencies:
+
+```bash
+npm install
+```
+
+3. Start the development server:
+
+```bash
+npm run dev
+```
+
+4. Open your browser and go to:
+
+```
+http://localhost:5173
+```
+
+## Project Structure
+
+```
+src/
+├── components/       # Reusable components
+├── pages/            # Route-level pages
+├── js/store          # Zustand state management
+├── App.css           # Global styles and Tailwind config
+├── App.jsx           # Main app entry
+└── main.jsx          # React DOM render entry
+```
+
+## API
+
+This project uses the Noroff Holidaze API: [https://v2.api.noroff.dev/holidaze](https://v2.api.noroff.dev/holidaze)
+
+## Contributing
+
+Pull requests are welcome. For major changes, please open an issue first to discuss what you’d like to change.
+
+## Noroff
+
+This project is a ProjectExam work for Noroff.
+
