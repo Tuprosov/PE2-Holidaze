@@ -1,4 +1,10 @@
 import { create } from "zustand";
+import {
+  API_HOLIDAZE_VENUES,
+  API_HOLIDAZE_BOOKINGS,
+  API_HOLIDAZE_PROFILES,
+} from "../constants";
+import { API } from "../api/api";
 
 export const useSearchStore = create((set) => ({
   showLocation: false,
@@ -6,6 +12,7 @@ export const useSearchStore = create((set) => ({
   showGuests: false,
   showSearchBar: false,
   showSuggestions: false,
+  searchQuery: "",
 
   setShowLocation: (value) => set({ showLocation: value }),
   setShowCalendar: (value) => set({ showCalendar: value }),
@@ -13,6 +20,13 @@ export const useSearchStore = create((set) => ({
   setShowSuggestions: (value) => set({ showSuggestions: value }),
   toggleSearchBar: () =>
     set((state) => ({ showSearchBar: !state.showSearchBar })),
+  setSearchQuery: (query) =>
+    set((state) => ({
+      searchQuery: {
+        ...state.searchQuery,
+        ...query,
+      },
+    })),
 }));
 
 export const useDateStore = create((set) => ({
@@ -59,5 +73,88 @@ export const useGuestStore = create((set, get) => ({
       pets: 0,
       total: 0,
     });
+  },
+}));
+
+export const useVenueStore = create((set) => ({
+  venues: [],
+  singleVenue: {},
+  originalVenues: [],
+  loading: false,
+  error: null,
+  isWishlisted: false,
+  bookings: [],
+  setBookings: (bookings) => set({ bookings }),
+  setIsWishlisted: (state) => set({ isWishlisted: !state.isWishlisted }),
+  setVenues: (value) => {
+    set({ venues: value });
+  },
+  fetchVenues: async () => {
+    set({ loading: true, error: null });
+    const api = new API(API_HOLIDAZE_VENUES);
+    try {
+      const response = await api.getVenues(API_HOLIDAZE_VENUES);
+      set({ originalVenues: response.data });
+      set({ venues: response.data, loading: false });
+      console.log("Venues fetched:", response.data);
+    } catch (error) {
+      set({ error: error.message, loading: false });
+    }
+  },
+
+  fetchVenue: async (id) => {
+    set({ loading: true, error: null });
+    const api = new API(API_HOLIDAZE_VENUES);
+    try {
+      const response = await api.getVenue(id);
+      set({ singleVenue: response.data, loading: false });
+      set({
+        bookings: response.data.bookings
+          .map((booking) => ({
+            from: new Date(booking.dateFrom),
+            to: new Date(booking.dateTo),
+          }))
+          .sort((a, b) => a.from - b.from),
+      });
+      console.log("Single venue fetched:", response.data);
+    } catch (error) {
+      set({ error: error.message, loading: false });
+    }
+  },
+}));
+
+export const useLocationStore = create((set) => ({
+  location: "",
+  locationSuggestions: [],
+  setLocationSuggestions: (suggestions) => {
+    set({ locationSuggestions: suggestions });
+  },
+  setLocation: (location) => set({ location }),
+  resetLocation: () => set({ location: "" }),
+}));
+
+export const useBookingStore = create((set) => ({
+  booking: {
+    dateFrom: null,
+    dateTo: null,
+    guests: 0,
+    venueId: null,
+  },
+  totalPrice: 0,
+
+  setTotalPrice: (price) => set({ totalPrice: price }),
+
+  setBooking: (update) =>
+    set((state) => ({
+      booking: {
+        ...state.booking,
+        ...update,
+      },
+    })),
+
+  bookVenue: async (booking) => {
+    const api = new API(API_HOLIDAZE_BOOKINGS);
+    const response = await api.bookVenue(booking);
+    console.log("Booking created:", response.data);
   },
 }));
