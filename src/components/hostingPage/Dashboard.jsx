@@ -1,4 +1,4 @@
-import { use, useState } from "react";
+import { useState } from "react";
 import { useUserStore } from "../../js/store/userStore";
 
 export default function Dashboard() {
@@ -13,7 +13,7 @@ export default function Dashboard() {
             <p className="text-center">
               You have {reservations.past.length} past reservations.
             </p>
-            {displayReservations()}
+            {displayReservations(activeTab)}
           </>
         );
       case "cancelled":
@@ -22,7 +22,7 @@ export default function Dashboard() {
             <p className="text-center">
               You have {reservations.cancelled.length} cancelled reservations.
             </p>
-            {displayReservations()}
+            {displayReservations(activeTab)}
           </>
         );
       case "all":
@@ -31,7 +31,7 @@ export default function Dashboard() {
             <p className="text-center">
               You have {reservations.all.length} total reservations.
             </p>
-            {displayReservations()}
+            {displayReservations(activeTab)}
           </>
         );
       default: // "upcoming"
@@ -40,7 +40,7 @@ export default function Dashboard() {
             <p className="text-center">
               You have {reservations.upcoming.length} upcoming reservations.
             </p>
-            {displayReservations()}
+            {displayReservations(activeTab)}
           </>
         );
     }
@@ -49,16 +49,12 @@ export default function Dashboard() {
   return (
     <div className="mb-8">
       {/* tabs */}
-      <div className="flex space-x-4 mb-4">
+      <div className="flex flex-wrap gap-1 mb-4">
         {["upcoming", "past", "cancelled", "all"].map((tab) => (
           <button
             key={tab}
             onClick={() => setActiveTab(tab)}
-            className={`px-4 py-2 rounded font-medium ${
-              activeTab === tab
-                ? "bg-blue-500 text-white"
-                : "bg-gray-200 text-gray-700"
-            }`}
+            className="px-4 py-2"
           >
             {tab.charAt(0).toUpperCase() + tab.slice(1)}
           </button>
@@ -66,13 +62,14 @@ export default function Dashboard() {
       </div>
 
       {/* tab Content */}
-      <div className="p-4 bg-gray-100 rounded h-48">{renderContent()}</div>
+      <div className="p-4 border-t border-b [border-color:#d6e4e7] rounded">
+        {renderContent()}
+      </div>
     </div>
   );
 }
 
-function ReservationCard({ venue }) {
-  const booking = venue.bookings;
+function ReservationCard({ venue, booking }) {
   const formatDate = (date) =>
     new Date(date).toLocaleDateString("en-US", {
       year: "numeric",
@@ -98,7 +95,8 @@ function ReservationCard({ venue }) {
         </p>
         <p className="text-gray-500">
           <strong>
-            {formatDate(booking.dateFrom)} - {formatDate(booking.dateTo)}
+            {formatDate(booking.dateFrom)} - {formatDate(booking.dateTo)} |
+            Guests: {booking.guests}
           </strong>
         </p>
       </div>
@@ -106,7 +104,7 @@ function ReservationCard({ venue }) {
   );
 }
 
-function displayReservations() {
+function displayReservations(activeTab) {
   const { userVenues, reservations, isLoading } = useUserStore();
   if (isLoading) {
     return <p className="text-center">Loading...</p>;
@@ -119,13 +117,12 @@ function displayReservations() {
   }, {});
 
   return (
-    <ul className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+    <ul className="flex flex-wrap items bg-center gap-4">
       {reservations[activeTab].map((res) => {
         const venue = venueMap[res.venueId];
-
         return (
-          <li key={res.id} className="mb-4 p-4 border rounded">
-            <ReservationCard venue={venue} />
+          <li key={res.id} className="border  [border-color:#d6e4e7] rounded">
+            <ReservationCard venue={venue} booking={res} />
           </li>
         );
       })}
