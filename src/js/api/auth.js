@@ -1,15 +1,13 @@
+import { API_AUTH_REGISTER, API_AUTH_LOGIN } from "../constants.js";
 import { headers } from "../utils/headers.js";
 
 export class Auth {
-  constructor(baseURL) {
-    this.baseURL = baseURL;
-  }
-  static async register({ name, email, password }) {
+  static async register({ name, email, password, venueManager = true }) {
     try {
-      const response = await fetch(this.baseURL, {
+      const response = await fetch(API_AUTH_REGISTER, {
         method: "POST",
         headers: headers(),
-        body: JSON.stringify({ name, email, password }),
+        body: JSON.stringify({ name, email, password, venueManager }),
       });
 
       if (!response.ok) {
@@ -26,8 +24,11 @@ export class Auth {
   }
 
   static async login({ email, password }) {
+    const url = new URL(API_AUTH_LOGIN);
+    url.searchParams.set("_holidaze", true);
+    url.searchParams.set("venueManager", true);
     try {
-      const response = await fetch(this.baseURL {
+      const response = await fetch(url, {
         method: "POST",
         headers: headers(),
         body: JSON.stringify({ email, password }),
