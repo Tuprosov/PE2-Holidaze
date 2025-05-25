@@ -78,14 +78,18 @@ export default function Header() {
           </motion.div>
         )}
       </AnimatePresence>
-      <button
-        onClick={() => setshowMobileSearch(true)}
-        className="w-full flex pre-lg:hidden bg-white shadow-md p-4 rounded-full  items-center justify-center gap-2"
-      >
-        <FaSearch />
-        <span>Search</span>
-      </button>
-      {showMobileSearch && <MobileSearchBar toggle={setshowMobileSearch} />}
+      {isHomePage && (
+        <button
+          onClick={() => setshowMobileSearch(true)}
+          className="w-full flex pre-lg:hidden bg-white shadow-md p-4 rounded-full  items-center justify-center gap-2"
+        >
+          <FaSearch />
+          <span>Search</span>
+        </button>
+      )}
+      {isHomePage && showMobileSearch && (
+        <MobileSearchBar toggle={setshowMobileSearch} />
+      )}
     </>
   );
 }
