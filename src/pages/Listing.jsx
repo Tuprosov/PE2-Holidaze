@@ -1,17 +1,16 @@
 import Header from "../components/hostingPage/Header";
-import Footer from "../components/Footer";
+import Footer from "../components/global/Footer";
 import Main from "../components/listingPage/Main";
 import { useUserStore } from "../js/store/userStore";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { getTitle } from "../js/utils/generateTitles";
 
 export default function ListingPage() {
-  const { message, setMessage, user, userVenues, getVenues, isLoggedIn } =
-    useUserStore();
+  const { message, setMessage, user, getVenues, isLoggedIn } = useUserStore();
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (userVenues.length || !user) return;
     const fetchData = async () => {
       try {
         await getVenues(user.name);
@@ -19,8 +18,9 @@ export default function ListingPage() {
         setMessage(error.message || "Something went wrong");
       }
     };
+    document.title = getTitle(location.pathname, { user });
     fetchData();
-  }, [user, userVenues]);
+  }, [user]);
 
   return isLoggedIn ? (
     <>
@@ -36,11 +36,15 @@ export default function ListingPage() {
       <Footer />
     </>
   ) : (
-    <div className="flex h-dvh justify-center items-center">
-      <h1>You’re not authorized. Please login or sign up</h1>
-      <button className="p-2" onClick={() => navigate("/auth")} type="button">
-        Login/Sign up
-      </button>
-    </div>
+    <>
+      <Header />
+      <div className="flex h-dvh justify-center items-center">
+        <h1>You’re not authorized. Please login or sign up</h1>
+        <button className="p-2" onClick={() => navigate("/auth")} type="button">
+          Login/Sign up
+        </button>
+      </div>
+      <Footer />
+    </>
   );
 }
