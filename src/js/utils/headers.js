@@ -2,7 +2,7 @@ import { API_KEY } from "../constants.js";
 
 export function headers() {
   const headers = new Headers();
-  const token = JSON.parse(localStorage.getItem("token"));
+  const token = JSON.parse(localStorage.getItem("user-storage"))?.state?.token;
 
   if (API_KEY) {
     headers.append("X-Noroff-API-Key", API_KEY);
