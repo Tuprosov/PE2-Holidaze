@@ -2,7 +2,7 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { Auth } from "../api/auth";
 import { API } from "../api/api";
-import { API_HOLIDAZE_PROFILES } from "../constants";
+import { API_HOLIDAZE_PROFILES, API_HOLIDAZE_VENUES } from "../constants";
 
 export const useUserStore = create(
   persist(
@@ -10,8 +10,7 @@ export const useUserStore = create(
       user: null,
       token: null,
       isLoggedIn: false,
-      hostMode: false,
-      isLoading: true,
+      isLoading: false,
       userVenues: [],
       reservations: {
         all: [],
@@ -24,29 +23,9 @@ export const useUserStore = create(
         past: [],
         cancelled: [],
       },
+      message: "",
 
-      getUserTrips: async (name) => {
-        const api = new API(API_HOLIDAZE_PROFILES);
-        const response = await api.getUserTrips(name);
-
-        const now = new Date();
-        const formattedTrips = response.data.map((trip) => ({
-          ...trip,
-          dateFrom: new Date(trip.dateFrom),
-          dateTo: new Date(trip.dateTo),
-        }));
-
-        set({
-          trips: {
-            upcoming: formattedTrips.filter((trip) => trip.dateFrom > now),
-            past: formattedTrips.filter((trip) => trip.dateTo < now),
-            cancelled: response.data.cancelled || [],
-          },
-        });
-      },
-
-      setIsLoading: (value) => set({ isLoading: value }),
-
+      setUserVenues: (value) => set({ userVenues: value }),
       setUser: (userData) =>
         set({
           user: userData,
@@ -56,27 +35,39 @@ export const useUserStore = create(
       clearUser: () =>
         set({
           user: null,
+          userVenues: [],
+          token: null,
+          reservations: {
+            all: [],
+            upcoming: [],
+            past: [],
+            cancelled: [],
+          },
           isLoggedIn: false,
         }),
 
-      setHostMode: (value) => set({ hostMode: value }),
-      setReservations: (data) =>
+      setReservations: (data) => {
+        const allBookings = data.flatMap(
+          (venue) =>
+            venue.bookings?.map((booking) => ({
+              ...booking,
+              venueId: venue.id,
+              venueName: venue.name,
+            })) || []
+        );
+
         set(() => ({
           reservations: {
-            all: data.bookings ?? [],
-            upcoming:
-              data.bookings?.filter((b) => new Date(b.dateFrom) > new Date()) ??
-              [],
-            past:
-              data.bookings?.filter(
-                (b) => new Date(b.dateFrom) <= new Date()
-              ) ?? [],
-            cancelled:
-              data.bookings?.filter((b) => b.status === "cancelled") ?? [],
+            all: allBookings,
+            upcoming: allBookings.filter(
+              (b) => new Date(b.dateFrom) >= new Date()
+            ),
+            past: allBookings.filter((b) => new Date(b.dateTo) < new Date()),
+            cancelled: allBookings.filter((b) => b.status === "cancelled"),
           },
-        })),
+        }));
+      },
 
-      message: "",
       setMessage: (value) => set({ message: value }),
 
       update: async (name, updatedData) => {
@@ -104,11 +95,62 @@ export const useUserStore = create(
         get().clearUser();
       },
 
+      getUserTrips: async (name) => {
+        set({ isLoading: true });
+        const api = new API(API_HOLIDAZE_PROFILES);
+        const response = await api.getUserTrips(name);
+        set({ isLoading: false });
+
+        const formattedTrips = response.data.map((trip) => ({
+          ...trip,
+          dateFrom: new Date(trip.dateFrom),
+          dateTo: new Date(trip.dateTo),
+        }));
+
+        set({
+          trips: {
+            upcoming: formattedTrips.filter(
+              (trip) => trip.dateFrom >= new Date()
+            ),
+            past: formattedTrips.filter((trip) => trip.dateTo <= new Date()),
+            cancelled: response.data.cancelled || [],
+          },
+        });
+      },
+
       getVenues: async (name) => {
+        set({ isLoading: true });
         const api = new API(API_HOLIDAZE_PROFILES);
         const response = await api.getUserVenues(name);
-        set({ userVenues: response.data });
+        set({ userVenues: response.data, isLoading: false });
         get().setReservations(response.data);
+        return response.data;
+      },
+
+      createListing: async (listingData) => {
+        set({ isLoading: true });
+        const api = new API(API_HOLIDAZE_VENUES);
+        const response = await api.createVenue(listingData);
+        set({ isLoading: false });
+        console.log("Listing created:", response.data);
+        return response.data;
+      },
+
+      updateListing: async (id, listingData) => {
+        set({ isLoading: true });
+        const api = new API(API_HOLIDAZE_VENUES);
+        const response = await api.updateListing(id, listingData);
+        set({ isLoading: false });
+        console.log("Listing updated:", response.data);
+        return response.data;
+      },
+
+      deleteListing: async (id) => {
+        set({ isLoading: true });
+        const api = new API(API_HOLIDAZE_VENUES);
+        const response = await api.deleteListing(id);
+        set({ isLoading: false });
+        console.log("Listing deleted:", response.data);
         return response.data;
       },
     }),
@@ -118,7 +160,8 @@ export const useUserStore = create(
         user: state.user,
         token: state.token,
         isLoggedIn: state.isLoggedIn,
-        hostMode: state.hostMode,
+        userVenues: state.userVenues,
+        reservations: state.reservations,
       }),
     }
   )
