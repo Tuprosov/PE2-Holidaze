@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useUserStore } from "../../js/store/userStore";
 
@@ -31,13 +31,29 @@ const steps = [
   "Set price",
 ];
 
-export default function CreateListing({ onClose, user, isCreating = true }) {
+export default function CreateListing({
+  onClose,
+  venue = {},
+  id = "",
+  isCreating = true,
+}) {
   const { createListing, setMessage, setUserVenues } = useUserStore();
   const [step, setStep] = useState(0);
   const [form, setForm] = useState(initialForm);
   const [errors, setErrors] = useState("");
   const [imageUrl, setImageUrl] = useState("");
   const [imageAlt, setImageAlt] = useState("");
+  const { updateListing } = useUserStore();
+
+  //if editing, merge venues to populate the form
+  useEffect(() => {
+    if (Object.keys(venue).length > 0) {
+      setForm((prev) => ({
+        ...prev,
+        ...venue,
+      }));
+    }
+  }, [venue]);
 
   const handleInput = (field, value, type) => {
     setForm((prev) => ({
@@ -98,7 +114,7 @@ export default function CreateListing({ onClose, user, isCreating = true }) {
   };
 
   const renderInput = (label, name, type = "text") => (
-    <div className="w-full h-24">
+    <div className="w-full h-24 text-left">
       <label className="block text-sm font-medium mb-1">{label}</label>
       <input
         type={type}
@@ -165,20 +181,19 @@ export default function CreateListing({ onClose, user, isCreating = true }) {
     e.preventDefault();
     const validation = validateStep();
     if (!validation) {
-      console.log("Listing created", form);
       try {
-        await createListing(form);
-        setUserVenues([]);
+        isCreating ? await createListing(form) : await updateListing(id, form);
         window.location.reload();
       } catch (error) {
-        setMessage(error.message || "Error creating listing");
+        setMessage(
+          error.message ||
+            `Error ${isCreating ? "creating" : "updating"} listing`
+        );
       }
     } else {
       setErrors(validation);
     }
   };
-
-  if (!user) return null;
 
   return (
     <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50">
@@ -224,7 +239,7 @@ export default function CreateListing({ onClose, user, isCreating = true }) {
               {step === 0 && renderInput("Describe your place", "description")}
               {step === 1 && renderInput("Listing name", "name")}
               {step === 2 && (
-                <div className="space-y-2 h-full">
+                <div className="space-y-2 h-full text-left">
                   <label className="block text-sm font-medium">Image URL</label>
                   <input
                     type="text"
