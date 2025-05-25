@@ -4,8 +4,8 @@ import Dashboard from "./Dashboard";
 export default function Main() {
   const { user } = useUserStore();
   return (
-    <main>
-      <div className="flex flex-col items-center">
+    <main className="px-6">
+      <div className="flex flex-col items-center mb-7">
         <h1 className="text-4xl font-bold mb-4">Welcome {user.name}</h1>
         <p className="text-lg text-gray-700">
           Here you can manage your listings, messages, and more.
