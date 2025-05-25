@@ -1,5 +1,6 @@
 import { FaSearch } from "react-icons/fa";
 import { format } from "date-fns";
+import { motion } from "framer-motion";
 import LocationInput from "../global/LocationInput";
 import DatePicker from "../global/DatePicker";
 import AddGuests from "../global/AddGuests";
@@ -75,11 +76,29 @@ export default function MobileSearchBar({ toggle }) {
     toggle(false);
   };
   return (
-    <div className="absolute p-8 z-100 inset-0 bg-[#f7f7f7] w-full left-1/2 transform -translate-x-1/2">
+    <motion.div
+      initial={{ opacity: 0, y: -10 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -10 }}
+      transition={{ duration: 0.2 }}
+      className="absolute p-8 z-100 inset-0 bg-[#f7f7f7] w-full left-1/2 transform -translate-x-1/2"
+    >
       <form
         onSubmit={(e) => handleSearch(e)}
-        className="relative w-full flex flex-col gap-4 flex-wrap align-items-center justify-between"
+        className="relative w-full flex flex-col gap-4 flex-wrap align-items-center justify-between mt-10"
       >
+        <button
+          onClick={() => {
+            toggle(false);
+            setShowCalendar(false);
+            setShowGuests(false);
+            setShowSuggestions(false);
+          }}
+          type="button"
+          className="absolute p-2 -top-12 right-0 w-10 h-10"
+        >
+          ✕
+        </button>
         <LocationInput />
         <div
           role="button"
@@ -117,7 +136,7 @@ export default function MobileSearchBar({ toggle }) {
         >
           <div className="relative flex-1 flex justify-center items-center">
             <span> {total ? `${total} guests, ${pets} pets` : "Guests"}</span>
-            <div className="absolute top-12 w-[110%] rounded-2xl">
+            <div className="absolute top-12 w-[105%] rounded-2xl">
               {showGuests && <AddGuests />}
             </div>
           </div>
@@ -129,10 +148,10 @@ export default function MobileSearchBar({ toggle }) {
         >
           <FaSearch />
         </button>
-        <div className="absolute w-full top-16 left-1/2 transform -translate-x-1/2">
+        <div className="absolute w-full top-34 left-1/2 transform -translate-x-1/2">
           {showCalendar && <DatePicker />}
         </div>
       </form>
-    </div>
+    </motion.div>
   );
 }
