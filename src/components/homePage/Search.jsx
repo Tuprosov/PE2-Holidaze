@@ -74,7 +74,6 @@ export function SearchBar() {
     showGuests,
     setShowSuggestions,
     toggleSearchBar,
-    searchQuery,
     setSearchQuery,
   } = useSearchStore();
   const { checkIn, checkOut } = useDateStore();
