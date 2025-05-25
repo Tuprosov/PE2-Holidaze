@@ -1,4 +1,3 @@
-// Profile.jsx
 import { useState } from "react";
 import EditProfileModal from "./EditProfileModal";
 import { useUserStore } from "../../js/store/userStore";
@@ -33,7 +32,7 @@ export function DisplayProfile() {
           />
           <div className="text-center self-end md:text-left">
             <h2 className="text-xl font-bold">{name}</h2>
-            <p className="text-gray-600">{email}</p>
+            <p className="text-gray-600 text-sm sm:text-[1rem]">{email}</p>
             <p className="text-sm text-gray-500">{city}</p>
             <p className="text-sm text-gray-500"> {bio}</p>
           </div>
