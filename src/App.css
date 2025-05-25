@@ -58,18 +58,6 @@ h3 {
   }
 }
 
-@media (prefers-reduced-motion: no-preference) {
- .logo {
-    animation: logo-spin infinite 20s linear;
-  }
-}
-
-@media (max-width: 750px) {
-  h1, h2 {
-    font-size: 1em;
-  }
-}
-
 :root {
   line-height: 1.5;
   background-color: #ffffff;
@@ -133,3 +121,26 @@ button:focus-visible {
 .rdp-weeks{
   font-weight: 700;
 }
+
+@media (prefers-reduced-motion: no-preference) {
+ .logo {
+    animation: logo-spin infinite 20s linear;
+  }
+}
+
+@media (max-width: 750px) {
+  h1, h2 {
+    font-size: 1em;
+  }
+
+  .rdp-day {
+    width: 30px !important;
+    height: 30px !important;
+  }
+
+  .rdp-day_button {
+    width: 30px !important;
+    height: 30px !important;
+  }
+}
+
