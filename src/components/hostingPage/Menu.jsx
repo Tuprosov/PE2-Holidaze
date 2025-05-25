@@ -2,7 +2,8 @@ import { Link } from "react-router-dom";
 import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useUserStore } from "../../js/store/userStore";
-import { MenuButton } from "../Menu";
+import { MenuButton } from "../homePage/Menu";
+import Nav from "./Nav";
 
 export default function Menu() {
   const [isOpen, setIsOpen] = useState(false);
@@ -22,7 +23,7 @@ export default function Menu() {
   }, []);
 
   return (
-    <div ref={menuRef}>
+    <div className="relative" ref={menuRef}>
       <MenuButton onClick={() => setIsOpen((prev) => !prev)} />
       {isOpen && (
         <nav className="absolute z-50 top-16 right-0 w-48 bg-white rounded-2xl shadow-md border [border-color:#d6e4e7] p-4 text-center">
