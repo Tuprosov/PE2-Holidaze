@@ -26,7 +26,7 @@ export class API {
       const response = await fetch(this.baseURL, {
         method: "POST",
         headers: headers(),
-        body: JSON.stringify(listingData),
+        body: JSON.stringify(venueData),
       });
 
       if (!response.ok) {
@@ -42,10 +42,12 @@ export class API {
   }
 
   // Get venues
-  async getVenues(_owner = true, _bookings = true) {
+  async getVenues(_owner = true, _bookings = true, sortOrder = "desc") {
     const url = new URL(this.baseURL);
     url.searchParams.set("_owner", _owner);
     url.searchParams.set("_bookings", _bookings);
+    url.searchParams.set("sort", "created");
+    url.searchParams.set("sortOrder", sortOrder);
 
     try {
       const response = await fetch(url, {
@@ -60,6 +62,29 @@ export class API {
       return data;
     } catch (error) {
       console.error("Error fetching venues:", error);
+    }
+  }
+
+  // Get venues by name
+  async getUserVenues(name, _owner = true, _bookings = true) {
+    const url = new URL(this.baseURL);
+    const newUrl = new URL(`${url}/${name}/venues`);
+    newUrl.searchParams.set("_owner", _owner);
+    newUrl.searchParams.set("_bookings", _bookings);
+
+    try {
+      const response = await fetch(newUrl, {
+        method: "GET",
+        headers: headers(),
+      });
+      if (!response.ok) {
+        throw new Error("Failed to fetch user venues");
+      }
+
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error("Error fetching user venues:", error);
     }
   }
 
@@ -86,10 +111,32 @@ export class API {
     }
   }
 
+  // Get trips by name
+  async getUserTrips(name) {
+    const url = new URL(this.baseURL);
+    const newUrl = new URL(`${url}/${name}/bookings`);
+    newUrl.searchParams.append("_venue", true);
+
+    try {
+      const response = await fetch(newUrl, {
+        method: "GET",
+        headers: headers(),
+      });
+      if (!response.ok) {
+        throw new Error("Failed to fetch trips");
+      }
+
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error("Error fetching trips:", error);
+    }
+  }
+
   // Update an existing venue
   async updateListing(id, updatedData) {
     try {
-      const response = await fetch(`${this.baseURL}${id}`, {
+      const response = await fetch(`${this.baseURL}/${id}`, {
         method: "PUT",
         headers: headers(),
         body: JSON.stringify(updatedData),
@@ -109,7 +156,7 @@ export class API {
   // Delete a venue by ID
   async deleteListing(id) {
     try {
-      const response = await fetch(`${this.baseURL}${id}`, {
+      const response = await fetch(`${this.baseURL}/${id}`, {
         method: "DELETE",
         headers: headers(),
       });
@@ -170,7 +217,7 @@ export class API {
   }
 
   //  update profile
-  async updateAccount(name, updatedData) {
+  async updateProfile(name, updatedData) {
     const url = new URL(this.baseURL);
     const newUrl = new URL(`${url}/${name}`);
 
