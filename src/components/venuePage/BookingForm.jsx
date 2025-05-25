@@ -6,8 +6,8 @@ import {
   useVenueStore,
 } from "../../js/store/useStore";
 import { useUserStore } from "../../js/store/userStore";
-import DatePicker from "../DatePicker";
-import AddGuests from "../AddGuests";
+import DatePicker from "../global/DatePicker";
+import AddGuests from "../global/AddGuests";
 import { format } from "date-fns";
 import { useNavigate } from "react-router-dom";
 
@@ -40,7 +40,6 @@ export default function BookingForm() {
       className="flex flex-col gap-6 p-6 mb-6 bg-white shadow-xl rounded-2xl border [border-color:#d6e4e7] sticky top-20"
     >
       <h2 className="text-xl font-semibold">Book this venue</h2>
-
       {/* Dates */}
       <div className="relative">
         <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -71,7 +70,7 @@ export default function BookingForm() {
           </button>
         </div>
 
-        <div className="absolute min-w-[700px] right-0 z-10">
+        <div className="absolute md:min-w-[700px] right-0 z-10">
           {showCalendar && <DatePicker isBooking={true} />}
         </div>
       </div>
@@ -100,10 +99,8 @@ export default function BookingForm() {
           {showGuests && <AddGuests isBooking={true} />}
         </div>
       </div>
-
       {/* Booking Details */}
       {booking?.dateFrom && booking?.dateTo && <BookingDetails />}
-
       {/* Submit */}
       {isLoggedIn ? (
         <button
@@ -114,7 +111,7 @@ export default function BookingForm() {
           Book now
         </button>
       ) : (
-        <p className="text-sm text-center">
+        <p className="text-sm text-red-500 text-center">
           You need to be logged in to book a venue.{" "}
           <button className="underline w-28" onClick={() => navigate("/auth")}>
             Login
