@@ -19,7 +19,7 @@ const settings = [
     title: "Your Listings",
     description: "View and edit your venues",
     icon: <FaHome className="text-xl text-gray-600" />,
-    path: "/account/listings",
+    path: "/myVenues",
   },
   {
     title: "Notifications",
@@ -64,9 +64,8 @@ export default function DisplayAccount() {
           <li
             className="p-4 border [border-color:#d6e4e7] shadow-xl rounded-2xl hover:shadow-md transition bg-white"
             key={item.title}
-            to={item.path}
           >
-            <Link className="flex items-start flex-col gap-4">
+            <Link to={item.path} className="flex items-start flex-col gap-4">
               <div>{item.icon}</div>
               <div>
                 <h3 className="text-lg font-semibold">{item.title}</h3>
