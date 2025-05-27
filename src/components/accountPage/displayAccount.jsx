@@ -4,30 +4,35 @@ import { useUserStore } from "../../js/store/userStore";
 
 const settings = [
   {
+    id: 1,
     title: "Account Info",
     description: "Manage your personal details and email",
     icon: <FaUser className="text-xl text-gray-600" />,
     path: "/account/info",
   },
   {
+    id: 2,
     title: "Change Password",
     description: "Update your password regularly",
     icon: <FaKey className="text-xl text-gray-600" />,
     path: "/account/password",
   },
   {
+    id: 3,
     title: "Your Listings",
     description: "View and edit your venues",
     icon: <FaHome className="text-xl text-gray-600" />,
     path: "/myVenues",
   },
   {
+    id: 4,
     title: "Notifications",
     description: "Manage push and email preferences",
     icon: <FaBell className="text-xl text-gray-600" />,
     path: "/account/notifications",
   },
   {
+    id: 5,
     title: "Privacy & Security",
     description: "Review privacy settings and permissions",
     icon: <FaShieldAlt className="text-xl text-gray-600" />,
@@ -63,7 +68,7 @@ export default function DisplayAccount() {
         {settings.map((item) => (
           <li
             className="p-4 border [border-color:#d6e4e7] shadow-xl rounded-2xl hover:shadow-md transition bg-white"
-            key={item.title}
+            key={item.id}
           >
             <Link to={item.path} className="flex items-start flex-col gap-4">
               <div>{item.icon}</div>
