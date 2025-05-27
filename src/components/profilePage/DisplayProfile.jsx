@@ -58,8 +58,8 @@ export function DisplayProfile() {
           <p className="text-gray-500">No reviews yet.</p>
         ) : (
           <ul className="space-y-4">
-            {reviewsFromHosts.map((review, idx) => (
-              <li key={idx} className="border p-4 rounded shadow-sm">
+            {reviewsFromHosts.map((review) => (
+              <li key={review.id} className="border p-4 rounded shadow-sm">
                 <p className="text-gray-800">{review.comment}</p>
                 <p className="text-sm text-gray-500 mt-1">
                   – {review.hostName}
