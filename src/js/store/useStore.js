@@ -96,7 +96,6 @@ export const useVenueStore = create((set) => ({
       const response = await api.getVenues(API_HOLIDAZE_VENUES);
       set({ originalVenues: response.data });
       set({ venues: response.data, loading: false });
-      console.log("Venues fetched:", response.data);
     } catch (error) {
       set({ error: error.message, loading: false });
     }
@@ -116,7 +115,6 @@ export const useVenueStore = create((set) => ({
           }))
           .sort((a, b) => a.from - b.from),
       });
-      console.log("Single venue fetched:", response.data);
     } catch (error) {
       set({ error: error.message, loading: false });
     }
@@ -155,6 +153,5 @@ export const useBookingStore = create((set) => ({
   bookVenue: async (booking) => {
     const api = new API(API_HOLIDAZE_BOOKINGS);
     const response = await api.bookVenue(booking);
-    console.log("Booking created:", response.data);
   },
 }));

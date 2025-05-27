@@ -88,7 +88,10 @@ export default function EditProfileModal({ isOpen, onClose, user }) {
         <h2 className="text-xl font-semibold mb-4">Edit Profile</h2>
         <form onSubmit={handleSubmit} className="relative space-y-4">
           <button
-            onClick={() => onClose(false)}
+            onClick={() => {
+              onClose(false);
+              setMessage("");
+            }}
             type="button"
             className="absolute p-2 -top-12 right-0 w-10 h-10"
           >

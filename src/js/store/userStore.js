@@ -132,7 +132,6 @@ export const useUserStore = create(
         const api = new API(API_HOLIDAZE_VENUES);
         const response = await api.createVenue(listingData);
         set({ isLoading: false });
-        console.log("Listing created:", response.data);
         return response.data;
       },
 
@@ -141,7 +140,6 @@ export const useUserStore = create(
         const api = new API(API_HOLIDAZE_VENUES);
         const response = await api.updateListing(id, listingData);
         set({ isLoading: false });
-        console.log("Listing updated:", response.data);
         return response.data;
       },
 
@@ -150,7 +148,6 @@ export const useUserStore = create(
         const api = new API(API_HOLIDAZE_VENUES);
         const response = await api.deleteListing(id);
         set({ isLoading: false });
-        console.log("Listing deleted:", response.data);
         return response.data;
       },
     }),

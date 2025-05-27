@@ -165,7 +165,6 @@ function ConfirmDeleteModal({ setConfirmModal, setShowModal, id }) {
     e.preventDefault();
     try {
       await deleteListing(id);
-      console.log("Confirmed delete");
       setConfirmModal(false);
       setShowModal(false);
     } catch (error) {
