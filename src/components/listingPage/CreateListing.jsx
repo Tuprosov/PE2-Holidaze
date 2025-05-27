@@ -37,7 +37,7 @@ export default function CreateListing({
   id = "",
   isCreating = true,
 }) {
-  const { createListing, setMessage, setUserVenues } = useUserStore();
+  const { createListing, setMessage } = useUserStore();
   const [step, setStep] = useState(0);
   const [form, setForm] = useState(initialForm);
   const [errors, setErrors] = useState("");
@@ -65,12 +65,6 @@ export default function CreateListing({
   const handleNext = (e) => {
     e.preventDefault();
     const validation = validateStep();
-    // if (Object.keys(validation).length === 0) {
-    //   setErrors({});
-    //   setStep((prev) => prev + 1);
-    // } else {
-    //   setErrors(validation);
-    // }
     if (validation) {
       setErrors(validation);
     } else {
@@ -115,8 +109,11 @@ export default function CreateListing({
 
   const renderInput = (label, name, type = "text") => (
     <div className="w-full h-24 text-left">
-      <label className="block text-sm font-medium mb-1">{label}</label>
+      <label htmlFor={name} className="block text-sm font-medium mb-1">
+        {label}
+      </label>
       <input
+        name={name}
         type={type}
         value={name.includes(".") ? getNestedValue(name) : form[name]}
         onChange={(e) =>
@@ -240,8 +237,14 @@ export default function CreateListing({
               {step === 1 && renderInput("Listing name", "name")}
               {step === 2 && (
                 <div className="space-y-2 h-full text-left">
-                  <label className="block text-sm font-medium">Image URL</label>
+                  <label
+                    htmlFor="imageUrl"
+                    className="block text-sm font-medium"
+                  >
+                    Image URL
+                  </label>
                   <input
+                    name="imageUrl"
                     type="text"
                     value={imageUrl}
                     onChange={(e) => setImageUrl(e.target.value)}
@@ -249,6 +252,7 @@ export default function CreateListing({
                     placeholder="https://example.com/image.jpg"
                   />
                   <input
+                    name="imageAlt"
                     type="text"
                     value={imageAlt}
                     onChange={(e) => setImageAlt(e.target.value)}
@@ -301,10 +305,12 @@ export default function CreateListing({
                 <div className="grid grid-cols-2 gap-4">
                   {Object.keys(form.meta).map((key) => (
                     <label
+                      htmlFor={key}
                       key={key}
                       className="flex items-center gap-2 capitalize"
                     >
                       <input
+                        name={key}
                         type="checkbox"
                         checked={form.meta[key]}
                         onChange={() => toggleAmenity(key)}
