@@ -7,12 +7,13 @@ import { useUserStore } from "../../js/store/userStore.js";
 import { useVenueStore } from "../../js/store/useStore.js";
 
 export default function Layout() {
-  const { user } = useUserStore();
+  const { user, isLoggedIn } = useUserStore();
   const { singleVenue } = useVenueStore();
   const location = useLocation();
   const isVenuePage = location.pathname.startsWith("/venue/");
 
   useEffect(() => {
+    if (!isLoggedIn) return;
     document.title = getTitle(location.pathname, { user, singleVenue });
   }, [location.pathname, singleVenue]);
 
