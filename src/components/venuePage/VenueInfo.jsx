@@ -58,7 +58,7 @@ export default function VenueInfo() {
           <div>
             <h3 className="font-semibold text-sm">Hosted by</h3>
             <Link
-              to={`/profile/${host.name}`}
+              to={`#`} // Replace with actual profile link
               className="text-blue-600 hover:underline text-sm"
             >
               {host.name}
