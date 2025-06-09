@@ -181,7 +181,10 @@ function ConfirmDeleteModal({ setConfirmModal, setShowModal, id }) {
       </p>
       <div className="flex justify-center gap-3">
         <button
-          onClick={() => setConfirmModal(false)}
+          onClick={() => {
+            setConfirmModal(false);
+            setShowModal(false);
+          }}
           className="px-4 py-2 rounded-lg text-gray-600 hover:bg-gray-100 transition"
         >
           Cancel
