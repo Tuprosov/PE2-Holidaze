@@ -13,8 +13,11 @@ function TripCard({ trip }) {
   return (
     <div className="flex items-center p-4 rounded shadow bg-white">
       <img
-        src={trip.venue.media[0].url}
-        alt={trip.venue.media[0].alt}
+        src={
+          trip.venue.media?.[0]?.url ||
+          "https://placehold.co/24x24?text=No+Image"
+        }
+        alt={trip.venue.media?.[0]?.alt || "placeholder image"}
         className="w-24 h-24 object-cover rounded mr-4"
       />
       <div>
