@@ -1,9 +1,5 @@
 import { create } from "zustand";
-import {
-  API_HOLIDAZE_VENUES,
-  API_HOLIDAZE_BOOKINGS,
-  API_HOLIDAZE_PROFILES,
-} from "../constants";
+import { API_HOLIDAZE_VENUES, API_HOLIDAZE_BOOKINGS } from "../constants";
 import { API } from "../api/api";
 
 export const useSearchStore = create((set) => ({
@@ -116,7 +112,16 @@ export const useVenueStore = create((set) => ({
           .sort((a, b) => a.from - b.from),
       });
     } catch (error) {
-      set({ error: error.message, loading: false });
+      let message;
+      if (error.isNetworkError) {
+        message = "Network error: Please check your internet connection.";
+      } else if (error.isServerError) {
+        message = `Server responded with error: ${error.message}`;
+      } else {
+        message = "An unknown error occurred.";
+      }
+
+      set({ error: message, loading: false });
     }
   },
 }));

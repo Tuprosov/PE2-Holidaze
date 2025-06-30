@@ -15,7 +15,6 @@ export class API {
       }
       return await response.json();
     } catch (error) {
-      console.error("Error fetching search results:", error);
       throw error;
     }
   }
@@ -36,7 +35,6 @@ export class API {
       const data = await response.json();
       return data;
     } catch (error) {
-      console.error("Error creating listing:", error);
       throw error;
     }
   }
@@ -61,7 +59,7 @@ export class API {
       const data = await response.json();
       return data;
     } catch (error) {
-      console.error("Error fetching venues:", error);
+      throw error;
     }
   }
 
@@ -101,13 +99,20 @@ export class API {
         headers: headers(),
       });
       if (!response.ok) {
-        throw new Error("Failed to fetch venue");
+        const errorMessage = `${response.status} - Bad request`;
+        const error = new Error(errorMessage);
+        error.isServerError = true;
+        error.status = response.status;
+        throw error;
       }
 
       const data = await response.json();
       return data;
     } catch (error) {
-      console.error("Error fetching venue:", error);
+      if (error instanceof TypeError) {
+        error.isNetworkError = true;
+      }
+      throw error;
     }
   }
 
@@ -129,7 +134,7 @@ export class API {
       const data = await response.json();
       return data;
     } catch (error) {
-      console.error("Error fetching trips:", error);
+      throw error;
     }
   }
 
@@ -167,7 +172,7 @@ export class API {
 
       return { message: "Venue deleted successfully" };
     } catch (error) {
-      console.error("Error deleting venue:", error);
+      throw error;
     }
   }
   //   book a venue
@@ -188,7 +193,6 @@ export class API {
 
       return await response.json();
     } catch (error) {
-      console.error("Error booking venue:", error);
       throw error;
     }
   }
@@ -212,7 +216,7 @@ export class API {
       const data = await response.json();
       return data.data;
     } catch (error) {
-      console.error("Error fetching profile:", error);
+      throw error;
     }
   }
 
@@ -238,7 +242,6 @@ export class API {
       const data = await response.json();
       return data.data;
     } catch (error) {
-      console.error("Error updating profile:", error);
       throw error;
     }
   }

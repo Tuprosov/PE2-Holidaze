@@ -66,6 +66,7 @@ export default function EditProfileModal({ isOpen, onClose, user }) {
         alt: "Banner Picture",
       };
     }
+
     try {
       await update(user.name, payload);
       setMessage("Profile updated successfully!");

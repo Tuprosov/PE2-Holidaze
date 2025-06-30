@@ -7,7 +7,7 @@ import BookingForm from "../components/venuePage/BookingForm";
 import Amenities from "../components/venuePage/Amenities";
 
 export default function VenuePage() {
-  const { fetchVenue, singleVenue, loading } = useVenueStore();
+  const { fetchVenue, singleVenue, loading, error } = useVenueStore();
   const { setBooking } = useBookingStore();
   const { id } = useParams();
 
@@ -20,6 +20,14 @@ export default function VenuePage() {
     return (
       <div className="flex justify-center items-center h-screen">
         <p>Loading...</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <h1>{error}</h1>
       </div>
     );
   }
