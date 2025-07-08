@@ -98,24 +98,30 @@ export const useUserStore = create(
       getUserTrips: async (name) => {
         set({ isLoading: true });
         const api = new API(API_HOLIDAZE_PROFILES);
-        const response = await api.getUserTrips(name);
-        set({ isLoading: false });
 
-        const formattedTrips = response.data.map((trip) => ({
-          ...trip,
-          dateFrom: new Date(trip.dateFrom),
-          dateTo: new Date(trip.dateTo),
-        }));
+        try {
+          const response = await api.getUserTrips(name);
+          set({ isLoading: false });
 
-        set({
-          trips: {
-            upcoming: formattedTrips.filter(
-              (trip) => trip.dateFrom >= new Date()
-            ),
-            past: formattedTrips.filter((trip) => trip.dateTo <= new Date()),
-            cancelled: response.data.cancelled || [],
-          },
-        });
+          const formattedTrips = response.data.map((trip) => ({
+            ...trip,
+            dateFrom: new Date(trip.dateFrom),
+            dateTo: new Date(trip.dateTo),
+          }));
+
+          set({
+            trips: {
+              upcoming: formattedTrips.filter(
+                (trip) => trip.dateFrom >= new Date()
+              ),
+              past: formattedTrips.filter((trip) => trip.dateTo <= new Date()),
+              cancelled: response.data.cancelled || [],
+            },
+          });
+        } catch (error) {
+          set({ isLoading: false });
+          throw error;
+        }
       },
 
       getVenues: async (name) => {
