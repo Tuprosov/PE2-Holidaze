@@ -3,7 +3,6 @@ import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useUserStore } from "../../js/store/userStore";
 import { MenuButton } from "../homePage/Menu";
-import Nav from "./Nav";
 
 export default function Menu() {
   const [isOpen, setIsOpen] = useState(false);
