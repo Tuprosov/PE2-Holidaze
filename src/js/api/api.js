@@ -53,12 +53,16 @@ export class API {
         headers: headers(),
       });
       if (!response.ok) {
-        throw new Error("Failed to fetch venues");
+        const error = await this.handleError(response);
+        throw error;
       }
 
       const data = await response.json();
       return data;
     } catch (error) {
+      if (error instanceof TypeError) {
+        error.isNetworkError = true;
+      }
       throw error;
     }
   }
@@ -76,13 +80,17 @@ export class API {
         headers: headers(),
       });
       if (!response.ok) {
-        throw new Error("Failed to fetch user venues");
+        const error = await this.handleError(response);
+        throw error;
       }
 
       const data = await response.json();
       return data;
     } catch (error) {
-      console.error("Error fetching user venues:", error);
+      if (error instanceof TypeError) {
+        error.isNetworkError = true;
+      }
+      throw error;
     }
   }
 
@@ -99,10 +107,7 @@ export class API {
         headers: headers(),
       });
       if (!response.ok) {
-        const errorMessage = `${response.status} - Bad request`;
-        const error = new Error(errorMessage);
-        error.isServerError = true;
-        error.status = response.status;
+        const error = await this.handleError(response);
         throw error;
       }
 
@@ -128,12 +133,16 @@ export class API {
         headers: headers(),
       });
       if (!response.ok) {
-        throw new Error("Failed to fetch trips");
+        const error = await this.handleError(response);
+        throw error;
       }
 
       const data = await response.json();
       return data;
     } catch (error) {
+      if (error instanceof TypeError) {
+        error.isNetworkError = true;
+      }
       throw error;
     }
   }
@@ -154,7 +163,7 @@ export class API {
       const data = await response.json();
       return data;
     } catch (error) {
-      console.error("Error updating listing:", error);
+      throw error;
     }
   }
 
@@ -243,6 +252,30 @@ export class API {
       return data.data;
     } catch (error) {
       throw error;
+    }
+  }
+
+  async handleError(response) {
+    let message = response.status;
+
+    try {
+      const errorData = await response.json();
+      if (errorData?.status) {
+        message = `${response.status} - ${errorData.status}`;
+      } else if (errorData?.errors?.[0]?.message) {
+        message = `${response.status} - ${errorData.errors[0].message}`;
+      }
+
+      const error = new Error(message);
+      error.status = response.status;
+      error.isServerError = true;
+      return error;
+      // JSON parsing failed — keep message as is
+    } catch {
+      const error = new Error(message);
+      error.status = response.status;
+      error.isServerError = true;
+      return error;
     }
   }
 }
