@@ -1,4 +1,8 @@
-import { useVenueStore, useBookingStore } from "../js/store/useStore";
+import {
+  useVenueStore,
+  useBookingStore,
+  useErrorStore,
+} from "../js/store/useStore";
 import { useParams } from "react-router-dom";
 import { useEffect } from "react";
 import Images from "../components/venuePage/Images";
@@ -7,12 +11,14 @@ import BookingForm from "../components/venuePage/BookingForm";
 import Amenities from "../components/venuePage/Amenities";
 
 export default function VenuePage() {
-  const { fetchVenue, singleVenue, loading, error } = useVenueStore();
+  const { fetchVenue, singleVenue, loading } = useVenueStore();
+  const { error, setError, clearError } = useErrorStore();
   const { setBooking } = useBookingStore();
   const { id } = useParams();
 
   useEffect(() => {
-    fetchVenue(id);
+    clearError();
+    fetchVenue(id).catch(setError);
     setBooking({ venueId: id });
   }, [id]);
 
