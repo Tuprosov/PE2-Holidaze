@@ -20,9 +20,13 @@ export default function MainContent() {
 
   return venues.length ? (
     <main className="grid justify-center grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-4 min-h-[100dvh]">
-      {venues.map((venue) => (
-        <LazyVenueCard key={venue.id} venue={venue} />
-      ))}
+      {venues.map((venue, index) =>
+        index < 4 ? (
+          <VenueCard key={venue.id} venue={venue} fetchPriority="high" />
+        ) : (
+          <LazyVenueCard key={venue.id} venue={venue} />
+        )
+      )}
     </main>
   ) : (
     <div className="flex justify-center items-center min-h-[100dvh]">
