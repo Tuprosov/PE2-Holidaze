@@ -32,7 +32,7 @@ export default function VenueCard({ venue, fetchPriority = "auto" }) {
                   <img
                     src={obj.url}
                     alt={obj.alt || `Venue image ${idx + 1}`}
-                    loading="eager"
+                    loading="lazy"
                     fetchpriority={fetchPriority}
                     className="w-full h-60 object-cover"
                   />
@@ -43,7 +43,7 @@ export default function VenueCard({ venue, fetchPriority = "auto" }) {
             <img
               src="https://placehold.co/40x240?text=No+Image"
               alt="Placeholder image"
-              loading="eager"
+              loading="lazy"
               fetchpriority={fetchPriority}
               className="w-full h-60 object-cover"
             />
