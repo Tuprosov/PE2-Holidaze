@@ -77,7 +77,6 @@ export const useVenueStore = create((set) => ({
   singleVenue: {},
   originalVenues: [],
   loading: false,
-  error: null,
   isWishlisted: false,
   bookings: [],
   setBookings: (bookings) => set({ bookings }),
@@ -93,7 +92,8 @@ export const useVenueStore = create((set) => ({
       set({ originalVenues: response.data });
       set({ venues: response.data, loading: false });
     } catch (error) {
-      set({ error: error.message, loading: false });
+      set({ loading: false });
+      throw error;
     }
   },
 
@@ -112,16 +112,8 @@ export const useVenueStore = create((set) => ({
           .sort((a, b) => a.from - b.from),
       });
     } catch (error) {
-      let message;
-      if (error.isNetworkError) {
-        message = "Network error: Please check your internet connection.";
-      } else if (error.isServerError) {
-        message = `Server responded with error: ${error.message}`;
-      } else {
-        message = "An unknown error occurred.";
-      }
-
-      set({ error: message, loading: false });
+      set({ loading: false });
+      throw error;
     }
   },
 }));
@@ -159,4 +151,20 @@ export const useBookingStore = create((set) => ({
     const api = new API(API_HOLIDAZE_BOOKINGS);
     const response = await api.bookVenue(booking);
   },
+}));
+
+export const useErrorStore = create((set) => ({
+  error: null,
+  setError: (error) => {
+    let message;
+    if (error.isNetworkError) {
+      message = "Network error: Please check your internet connection.";
+    } else if (error.isServerError) {
+      message = `Server responded with error: ${error.message}`;
+    } else {
+      message = "An unknown error occurred.";
+    }
+    set({ error: message });
+  },
+  clearError: () => set({ error: null }),
 }));
