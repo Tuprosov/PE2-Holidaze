@@ -1,24 +1,17 @@
-import DisplayTrips from "../components/tripsPage/DisplayTrips";
+import Trips from "../components/tripsPage/DisplayTrips";
 import { useEffect } from "react";
 import { useUserStore } from "../js/store/userStore";
+import { useErrorStore } from "../js/store/useStore";
 import { useNavigate } from "react-router-dom";
 
 export default function TripsPage() {
-  const { user, setMessage, getUserTrips, isLoading, isLoggedIn } =
-    useUserStore();
+  const { user, getUserTrips, isLoading, isLoggedIn } = useUserStore();
+  const { error, setError } = useErrorStore();
   const navigate = useNavigate();
 
   useEffect(() => {
     if (!isLoggedIn) return;
-    const fetchTrips = async () => {
-      try {
-        await getUserTrips(user.name);
-      } catch (error) {
-        setMessage(error.message || "Something went wrong");
-      }
-    };
-
-    fetchTrips();
+    getUserTrips(user.name).catch(setError);
   }, []);
 
   if (isLoading) {
@@ -28,10 +21,19 @@ export default function TripsPage() {
       </div>
     );
   }
+
+  if (error) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <h1>{error}</h1>
+      </div>
+    );
+  }
+
   return isLoggedIn ? (
     <div className="mb-10">
       <h1> Trips</h1>
-      <DisplayTrips />
+      <Trips />
     </div>
   ) : (
     <div className="flex h-dvh justify-center items-center">

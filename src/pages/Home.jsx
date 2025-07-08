@@ -1,12 +1,14 @@
 import MainContent from "../components/homePage/MainContent";
 import { useEffect } from "react";
-import { useVenueStore } from "../js/store/useStore";
+import { useVenueStore, useErrorStore } from "../js/store/useStore";
 
 export default function HomePage() {
-  const { error, loading, fetchVenues } = useVenueStore();
+  const { loading, fetchVenues } = useVenueStore();
+  const { error, setError, clearError } = useErrorStore();
 
   useEffect(() => {
-    fetchVenues();
+    clearError();
+    fetchVenues().catch(setError);
   }, []);
 
   if (loading) {
@@ -20,7 +22,7 @@ export default function HomePage() {
   if (error) {
     return (
       <div className="flex justify-center items-center h-screen">
-        <p>Error displaying venues. Please try again later.</p>
+        <h1>{error}</h1>
       </div>
     );
   }
