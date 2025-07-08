@@ -32,6 +32,7 @@ export default function VenueCard({ venue }) {
                   <img
                     src={obj.url}
                     alt={obj.alt || `Venue image ${idx + 1}`}
+                    loading="lazy"
                     className="w-full h-60 object-cover"
                   />
                 </SwiperSlide>
@@ -41,6 +42,7 @@ export default function VenueCard({ venue }) {
             <img
               src="https://placehold.co/40x240?text=No+Image"
               alt="Placeholder image"
+              loading="lazy"
               className="w-full h-60 object-cover"
             />
           )}
