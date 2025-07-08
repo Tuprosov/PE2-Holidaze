@@ -32,23 +32,17 @@ function TripCard({ trip }) {
   );
 }
 
-export default function UpcomingTrips() {
+export default function Trips() {
   const [showAllPast, setShowAllPast] = useState(false);
   const [showAllCancelled, setShowAllCancelled] = useState(false);
   const navigate = useNavigate();
-  const { message, setMessage, trips } = useUserStore();
+  const { trips } = useUserStore();
   const { upcoming, past, cancelled } = trips;
 
   const visiblePastTrips = showAllPast ? past : past.slice(0, 4);
   const visibleCancelledTrips = showAllCancelled
     ? cancelled
     : cancelled.slice(0, 4);
-
-  useEffect(() => {
-    setMessage("");
-  }, [setMessage]);
-
-  if (message) return <h1>{message}</h1>;
 
   return (
     <div className="px-4 py-8 space-y-10">
