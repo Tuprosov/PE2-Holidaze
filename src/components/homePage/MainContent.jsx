@@ -22,7 +22,7 @@ export default function MainContent() {
     <main className="grid justify-center grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-4 min-h-[100dvh]">
       {venues.map((venue, index) =>
         index < 4 ? (
-          <VenueCard key={venue.id} venue={venue} fetchPriority={"high"} />
+          <VenueCard key={venue.id} venue={venue} isAboveFold={true} />
         ) : (
           <LazyVenueCard key={venue.id} venue={venue} />
         )
