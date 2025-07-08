@@ -6,7 +6,7 @@ import { useVenueStore } from "../../js/store/useStore";
 import "swiper/css";
 import "swiper/css/navigation";
 
-export default function VenueCard({ venue }) {
+export default function VenueCard({ venue, fetchPriority = "auto" }) {
   const { id, media, location, price, rating } = venue;
   const { isWishlisted } = useVenueStore();
   const hasImages = media.length > 0;
@@ -32,7 +32,8 @@ export default function VenueCard({ venue }) {
                   <img
                     src={obj.url}
                     alt={obj.alt || `Venue image ${idx + 1}`}
-                    loading="lazy"
+                    loading="eager"
+                    fetchpriority={fetchPriority}
                     className="w-full h-60 object-cover"
                   />
                 </SwiperSlide>
@@ -42,7 +43,8 @@ export default function VenueCard({ venue }) {
             <img
               src="https://placehold.co/40x240?text=No+Image"
               alt="Placeholder image"
-              loading="lazy"
+              loading="eager"
+              fetchpriority={fetchPriority}
               className="w-full h-60 object-cover"
             />
           )}
