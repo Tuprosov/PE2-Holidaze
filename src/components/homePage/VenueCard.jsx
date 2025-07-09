@@ -70,7 +70,7 @@ export default function VenueCard({ venue, isAboveFold = false }) {
             {location.city}, {location.country}
           </div>
 
-          <div className="flex items-center justify-between text-sm">
+          <div className="flex flex-wrap items-center justify-between text-sm">
             {/* Star Rating without the number */}
             <div className="flex items-center gap-1 text-yellow-500">
               {Array.from({ length: 5 }).map((_, idx) =>
