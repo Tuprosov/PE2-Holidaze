@@ -4,7 +4,7 @@ export function getTitle(page, { user, singleVenue } = {}) {
   }
   switch (page) {
     case "/":
-      return "Holidaze | Rentals, cabins, beachhouses &amp; more";
+      return "Holidaze | Rentals, cabins, beachhouses and more";
     case "/profile":
       return `${user.name}'s profile `;
     case "/account":
